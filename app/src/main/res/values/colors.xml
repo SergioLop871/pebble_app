@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="bgBlack">#161616</color>
+    <color name="bgWidgetBlack">#2B2B2B</color>
+    <color name="bgNav">#282C35</color>
+
+    <color name="piechartGray">#A2AAA0</color>
+    <color name="pibbleLogoWater">#3E9DA1</color>
+    <color name="pibbleLogoSand">#BD955B</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

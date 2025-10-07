@@ -16,6 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        //Jitpack para descargar librerias externas (github)
+        maven(url = "https://jitpack.io")
     }
 }
 
