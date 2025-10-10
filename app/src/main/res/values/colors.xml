@@ -3,6 +3,7 @@
     <color name="bgBlack">#161616</color>
     <color name="bgWidgetBlack">#2B2B2B</color>
     <color name="bgNav">#282C35</color>
+    <color name="bgNavRipple">#55676B</color>
 
     <color name="piechartGray">#A2AAA0</color>
     <color name="pibbleLogoWater">#3E9DA1</color>
@@ -10,4 +11,6 @@
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
 </resources>
