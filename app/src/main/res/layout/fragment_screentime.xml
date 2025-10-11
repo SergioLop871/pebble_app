@@ -11,19 +11,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="122dp"
-            android:layout_marginTop="186dp"
-            android:layout_marginEnd="122dp"
-            android:text="TIEMPO EN PANTALLA"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+        <!-- Contenedor del selector del dia, mes, año -->
+        <View
+            android:id="@+id/timeInScreenDate"
+            android:layout_width="300dp"
+            android:layout_height="72dp"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="119dp"
+
+            android:layout_marginEnd="55dp"
+            android:layout_marginBottom="700dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Contenedor redondo del gráfico -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/chartContainer"
+            android:layout_width="350dp"
+            android:layout_height="250dp"
+            android:layout_margin="16dp"
+            android:layout_marginTop="14dp"
+            android:padding="10dp"
+            app:cardBackgroundColor="@color/bgWidgetBlack"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/timeInScreenDate">
+
+            <!-- El gráfico dentro del contenedor -->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="10dp" />
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

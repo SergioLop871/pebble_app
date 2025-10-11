@@ -4,11 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -39,11 +35,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnScreentime.setOnClickListener(this);
         btnLeaderboard.setOnClickListener(this);
         btnUserprofile.setOnClickListener(this);
+
+        //Para poner el icono de FocusFragment como seleccionado por default (inicial)
+        btnFocus.setSelected(true);
     }
 
     @Override
     public void onClick(View v){
         int btnId = v.getId(); //Obtener el id del boton que ha sido seleccionado
+
+        //Para reiniciar el color de los iconos del navbar
+        btnFocus.setSelected(false);
+        btnScreentime.setSelected(false);
+        btnLeaderboard.setSelected(false);
+        btnUserprofile.setSelected(false);
+
+        //Par colorear el icono seleccionado
+        v.setSelected(true);
 
         //Cambiar el fragmento de acuerdo al boton presionado
         if(btnId == R.id.nav_focus){

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgBlack"
     tools:context=".MainActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -31,8 +31,8 @@
         app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +48,8 @@
                 android:contentDescription="nav_bar_focus"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/baseline_add_circle_24" />
+                android:src="@drawable/baseline_add_circle_24"
+                app:tint="@color/nav_color_tint"/>
 
             <ImageButton
                 android:id="@+id/nav_screetime"
@@ -59,7 +60,8 @@
                 android:contentDescription="nav_bar_screentime"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/outline_bar_chart_24" />
+                android:src="@drawable/outline_bar_chart_24"
+                app:tint="@color/nav_color_tint"/>
 
             <ImageButton
                 android:id="@+id/nav_leaderboard"
@@ -70,7 +72,8 @@
                 android:contentDescription="nav_bar_leaderboard"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/outline_chess_queen_24" />
+                android:src="@drawable/outline_chess_queen_24"
+                app:tint="@color/nav_color_tint"/>
 
             <ImageButton
                 android:id="@+id/nav_user"
@@ -81,7 +84,8 @@
                 android:contentDescription="nav_bar_user"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/baseline_account_circle_24" />
+                android:src="@drawable/baseline_account_circle_24"
+                app:tint="@color/nav_color_tint"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Colores de los iconos del nav bar dependiendo de su estado -->
+
+    <!-- Color cuando está seleccionado -->
+    <item android:color="@color/pibbleLogoWater" android:state_selected="true" />
+
+    <!-- Color cuando NO está seleccionado -->
+    <item android:color="@color/white" />
+</selector>
