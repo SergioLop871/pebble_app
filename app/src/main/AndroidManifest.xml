@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Declarar el permiso para indicar la intención de usar la API "App usage statistics" -->
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions"/>
+    <!-- tools:ignore se usa para suprimir la advertencia del Lint sobre permisos protegidos.
+         PACKAGE_USAGE_STATS es un permiso de nivel de sistema que no se otorga automáticamente;
+         el usuario debe habilitarlo manualmente desde los ajustes del dispositivo -->
 
     <application
         android:allowBackup="true"
@@ -22,12 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".AppUsageStatisticsActivity"
-            android:exported="true">
-
-        </activity>
-
     </application>
 
 </manifest>

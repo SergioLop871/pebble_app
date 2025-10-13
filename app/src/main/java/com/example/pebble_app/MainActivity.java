@@ -58,13 +58,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             replaceFragment(new FocusFragment());
 
         } else if (btnId == R.id.nav_screetime) {
-            replaceFragment(new ScreentimeFragment());
+            replaceFragment(new ScreenTimeFragment());
 
         } else if (btnId == R.id.nav_leaderboard) {
             replaceFragment(new LeaderboardFragment());
 
         } else if (btnId == R.id.nav_user) {
-            replaceFragment(new UserprofileFragment());
+            replaceFragment(new UserFragment());
 
         }
     }
