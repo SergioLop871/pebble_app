@@ -5,42 +5,147 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgBlack"
-    tools:context=".ScreentimeFragment">
+    tools:context=".ScreenTimeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- Contenedor del selector del dia, mes, año -->
-        <View
-            android:id="@+id/timeInScreenDate"
-            android:layout_width="300dp"
-            android:layout_height="72dp"
-            android:layout_marginStart="55dp"
-            android:layout_marginTop="119dp"
-
-            android:layout_marginEnd="55dp"
-            android:layout_marginBottom="700dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="84dp"
+            android:layout_marginEnd="209dp"
+            android:gravity="start"
+            android:text="Tiempo en Pantalla"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/schemeSelectorContainer"
+            android:layout_width="350dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            app:cardBackgroundColor="@color/bgWidgetBlack"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/schemeSelectorLeftArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_left_24" />
+
+                <TextView
+                    android:id="@+id/schemeSelectorToday"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Hoy"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/schemeSelectorWeek"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="Semanalmente"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/schemeSelectorMonth"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="Mensualmente"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/schemeSelectorYear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Anualmente"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/schemeSelectorRightArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_right_24" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Contenedor del selector del dia, mes, año -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/schemeDateContainer"
+            android:layout_width="350dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            app:cardBackgroundColor="@color/bgBlack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/schemeSelectorContainer"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Mar, 23 Sep"
+                android:textColor="@color/white" />
+        </androidx.cardview.widget.CardView>
+
         <!-- Contenedor redondo del gráfico -->
+
         <androidx.cardview.widget.CardView
             android:id="@+id/chartContainer"
             android:layout_width="350dp"
             android:layout_height="250dp"
             android:layout_margin="16dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="13dp"
             android:padding="10dp"
             app:cardBackgroundColor="@color/bgWidgetBlack"
             app:cardCornerRadius="15dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.491"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/timeInScreenDate">
+            app:layout_constraintTop_toBottomOf="@+id/schemeDateContainer">
 
             <!-- El gráfico dentro del contenedor -->
             <com.github.mikephil.charting.charts.PieChart
@@ -51,6 +156,254 @@
                 android:layout_margin="10dp" />
 
         </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ScreenTimeInfoContainer"
+            android:layout_width="360dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            app:cardBackgroundColor="@color/bgBlack"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chartContainer">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:cardBackgroundColor="@color/bgBlack"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoFocusScoreContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="140dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoFocusScoreLabel"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:gravity="center"
+                                    android:text="Puntaje de enfoque"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoFocusScoreText"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:gravity="center"
+                                    android:text="36%"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoFocusScoreLabel" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoQueriesContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="140dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoFocusQueriesLabel"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="30dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:gravity="center"
+                                    android:text="Consultas"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoFocusQueriesText"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:gravity="center"
+                                    android:text="50"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoFocusQueriesLabel" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    app:cardBackgroundColor="@color/bgBlack"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoScreenTimeContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="140dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoScreenTimeLabel"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:gravity="center"
+                                    android:text="Tiempo en Pantalla"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoScreenTimeText"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:gravity="center"
+                                    android:text="4h 15m"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoScreenTimeLabel" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoStreakContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="140dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoStreakLabel"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:gravity="center"
+                                    android:text="Mejor Racha Global"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoStreakText"
+                                    android:layout_width="140dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="38dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="38dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:gravity="center"
+                                    android:text="🔥22"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoStreakLabel" />
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
