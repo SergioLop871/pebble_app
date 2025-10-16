@@ -122,7 +122,7 @@ public class ScreenTimeFragment extends Fragment {
         //pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS); //default
 
         // Animación en X, Y en milisegundos
-        //pieChart.animateXY(5000,5000);
+        pieChart.animateXY(1000,1000);
 
         // Ocultar descripción
         pieChart.getDescription().setEnabled(false);
