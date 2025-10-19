@@ -28,6 +28,13 @@ public class ScreenTimeFragment extends Fragment {
     // Atributo para gráfica de pastel
     private PieChart pieChart;
 
+    /*ArrayLists temporales para ver el funcionamiento del
+    * paso de un bundle (info) del fragmento de ScreenTime a
+    * Statistics*/
+    private ArrayList<String> appNames = new ArrayList<>();
+    private ArrayList<Integer> appUsageHours = new ArrayList<>();
+
+
     public ScreenTimeFragment() {
         // Required empty public constructor
     }
@@ -43,7 +50,38 @@ public class ScreenTimeFragment extends Fragment {
         // Crear objeto AppUsageStatics
         AppUsageStatistics appUsageStatistics = new AppUsageStatistics(requireContext());
 
+        //---------------------OnClickListener para ir a "StatisticsFragment"-----------------------
+        pieChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment statisticsFragment = new StatisticsFragment();
+
+                //Crear el bundle para pasar al fragmento
+                Bundle infoApps = new Bundle();
+
+                //Pasar los ArrayList al bundle con una clave
+                infoApps.putStringArrayList("app_names", appNames);
+                infoApps.putIntegerArrayList("app_usage_hours", appUsageHours);
+
+                //Pasar el bundle al fragmento
+                statisticsFragment.setArguments(infoApps);
+
+                // Reemplazar el fragmento actual por StatisticsFragment
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentContainerView, statisticsFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
         /*---------------------------------OBTENER LOS DATOS--------------------------------------*/
+        //Vaciar los ArrayList para no volver a llenarlos con los mismos datos
+        appNames.clear();
+        appUsageHours.clear();
+
+        //Deshabilitar el toque en las secciones de la grafica
+        pieChart.setTouchEnabled(false);
+
         // Obtener la lista de estadísticas de uso
         List<UsageStats> usageStats = appUsageStatistics.getUsageStatistics(UsageStatsManager.INTERVAL_MONTHLY);
 
@@ -53,6 +91,12 @@ public class ScreenTimeFragment extends Fragment {
         // Crear datos (Ejemplo)
         for(int i = 1; i<=4; i++){
             String nombreApp = "App" + i;
+
+            //Agregar nombre al ArrayList de nombres
+            appNames.add(nombreApp);
+
+            //Agregar horas de app al ArrayList de horas
+            appUsageHours.add(i);
 
             // Crear un dato (categoría)
             // PieEntry(horas,nombreApp)
