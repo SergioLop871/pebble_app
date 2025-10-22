@@ -7,12 +7,15 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -23,7 +26,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScreenTimeFragment extends Fragment {
+public class ScreenTimeFragment extends Fragment{
 
     // Atributo para gráfica de pastel
     private PieChart pieChart;
@@ -34,15 +37,128 @@ public class ScreenTimeFragment extends Fragment {
     private ArrayList<String> appNames = new ArrayList<>();
     private ArrayList<Integer> appUsageHours = new ArrayList<>();
 
+    //Para los btn del selector de esquema
+    private ImageButton schemeBtnLeftArrow, schemeBtnRightArrow;
+    private TextView schemeBtnToday, schemeBtnWeek, schemeBtnMonth, schemeBtnYear;
+
+    private  int schemeSelectorIndex;
+
+    //Btn y texto para la información de la fecha según el esquema
+    private ImageButton schemeInfoBtnLeftArrow, schemeInfoBtnRightArrow;
+    private TextView schemeDateTextView;
+
+    //Para cambiar entre fechas (solo esquema semanal, mensual y anual)
+    private int schemeDateInfoIndex; //* no implementado aún
 
     public ScreenTimeFragment() {
         // Required empty public constructor
     }
 
+    /*
+    * SetCheme() para cambiar la información en la gráfica pastel de acuerdo al esquema
+    * (Aún no implementado)
+    * */
+    void setScheme(String scheme){
+
+        //View.INVISIBLE: el elemento ocupa el espacio pero no es visible
+        //View.VISIBLE: el elemento es visible
+        //View.GONE: el elemento no ocupa espacio y no es visible (eliminado)
+
+        if(scheme.equals("today")){
+            schemeInfoBtnLeftArrow.setVisibility(View.INVISIBLE);
+            schemeInfoBtnRightArrow.setVisibility(View.INVISIBLE);
+            schemeBtnToday.setSelected(true);
+            schemeDateTextView.setText("Mar, 23 Sep");
+        } else if (scheme.equals("week")) {
+            schemeInfoBtnLeftArrow.setVisibility(View.VISIBLE);
+            schemeInfoBtnRightArrow.setVisibility(View.VISIBLE);
+            schemeBtnWeek.setSelected(true);
+            schemeDateTextView.setText("Mar, 23 sep - Mar, 30 sep");
+        } else if (scheme.equals("month")){
+            schemeInfoBtnLeftArrow.setVisibility(View.VISIBLE);
+            schemeInfoBtnRightArrow.setVisibility(View.VISIBLE);
+            schemeBtnMonth.setSelected(true);
+            schemeDateTextView.setText("Septiembre");
+        } else if (scheme.equals("year")) {
+            schemeInfoBtnLeftArrow.setVisibility(View.VISIBLE);
+            schemeInfoBtnRightArrow.setVisibility(View.VISIBLE);
+            schemeBtnYear.setSelected(true);
+            schemeDateTextView.setText("2025");
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_screen_time, container, false);
+
+        //Obtener textos (botones) para el selector de esquema de la gráfica
+        schemeBtnLeftArrow  = view.findViewById(R.id.schemeSelectorLeftArrow);
+        schemeBtnRightArrow = view.findViewById(R.id.schemeSelectorRightArrow);
+
+        schemeBtnToday = view.findViewById(R.id.schemeSelectorToday);
+        schemeBtnWeek  = view.findViewById(R.id.schemeSelectorWeek);
+        schemeBtnMonth = view.findViewById(R.id.schemeSelectorMonth);
+        schemeBtnYear  = view.findViewById(R.id.schemeSelectorYear);
+
+        //Obtener el TextView que muestra la fecha o fechas dependiendo el esquema
+        schemeInfoBtnLeftArrow = view.findViewById(R.id.schemeDateInfoLeftArrow);
+        schemeInfoBtnRightArrow = view.findViewById(R.id.schemeDateInfoRightArrow);
+
+        schemeDateTextView = view.findViewById(R.id.schemeDateInfo);
+
+        //OnClickListener para los botones del selector de esquema
+        View.OnClickListener schemeClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int btnId = v.getId();
+                String[] schemesPositions = {"today", "week", "month", "year"};
+
+                schemeBtnToday.setSelected(false);
+                schemeBtnWeek.setSelected(false);
+                schemeBtnMonth.setSelected(false);
+                schemeBtnYear.setSelected(false);
+
+                if(btnId == R.id.schemeSelectorLeftArrow){
+                    schemeSelectorIndex--;
+                    if(schemeSelectorIndex < 0){
+                        schemeSelectorIndex = 3;
+                    }
+                    setScheme(schemesPositions[schemeSelectorIndex]);
+                } else if (btnId == R.id.schemeSelectorToday){
+                    setScheme(schemesPositions[0]);
+                } else if (btnId == R.id.schemeSelectorWeek) {
+                    setScheme(schemesPositions[1]);
+                } else if (btnId == R.id.schemeSelectorMonth) {
+                    setScheme(schemesPositions[2]);
+                } else if (btnId == R.id.schemeSelectorYear) {
+                    setScheme(schemesPositions[3]);
+                } else if (btnId == R.id.schemeSelectorRightArrow){
+                    schemeSelectorIndex++;
+                    if(schemeSelectorIndex > 3){
+                        schemeSelectorIndex = 0;
+                    }
+                    setScheme(schemesPositions[schemeSelectorIndex]);
+                }
+            }
+        };
+
+        //Botones del selector esquema
+        schemeBtnToday.setOnClickListener(schemeClickListener);
+        schemeBtnWeek.setOnClickListener(schemeClickListener);
+        schemeBtnMonth.setOnClickListener(schemeClickListener);
+        schemeBtnYear.setOnClickListener(schemeClickListener);
+        schemeBtnLeftArrow.setOnClickListener(schemeClickListener);
+        schemeBtnRightArrow.setOnClickListener(schemeClickListener);
+
+        //Dejar por defecto el esquema "Hoy"
+        schemeSelectorIndex = 0;
+        schemeBtnToday.setSelected(true);
+
+        //Hacer invisibles los btn de las flechas (selector de fecha) en el esquema de "Hoy"
+        schemeInfoBtnLeftArrow.setVisibility(View.INVISIBLE);
+        schemeInfoBtnRightArrow.setVisibility(View.INVISIBLE);
 
         // Asignar el elemento de la gráfica en el layout del fragmento
         pieChart = view.findViewById(R.id.pie_chart);
@@ -54,7 +170,15 @@ public class ScreenTimeFragment extends Fragment {
         pieChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Crear el fragmento nuevo para la transición
                 Fragment statisticsFragment = new StatisticsFragment();
+
+                //Crear la transición
+                FragmentTransaction transaction = requireActivity()
+                        .getSupportFragmentManager()
+                        .beginTransaction();
+
 
                 //Crear el bundle para pasar al fragmento
                 Bundle infoApps = new Bundle();
@@ -66,9 +190,16 @@ public class ScreenTimeFragment extends Fragment {
                 //Pasar el bundle al fragmento
                 statisticsFragment.setArguments(infoApps);
 
+                //Hacer una animación al ir y volver del fragmento nuevo
+                transaction.setCustomAnimations(
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right
+                );
+
                 // Reemplazar el fragmento actual por StatisticsFragment
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, statisticsFragment)
+                transaction.replace(R.id.fragmentContainerView, statisticsFragment)
                         .addToBackStack(null)
                         .commit();
             }
@@ -197,4 +328,6 @@ public class ScreenTimeFragment extends Fragment {
 
         return view;
     }
+
+
 }

@@ -1,12 +1,14 @@
 package com.example.pebble_app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -15,6 +17,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Se crean los botones para cada icono del navbar
     private ImageButton btnFocus, btnScreentime, btnLeaderboard, btnUserprofile;
+
+    //Para saber en que indice del nav se encuentra y hacer una animación diferente
+    private int currentFragmentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v){
         int btnId = v.getId(); //Obtener el id del boton que ha sido seleccionado
+        int newFragmentIndex = currentFragmentIndex;
+        Fragment newFragment = null;
 
         //Para reiniciar el color de los iconos del navbar
         btnFocus.setSelected(false);
@@ -55,24 +62,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Cambiar el fragmento de acuerdo al boton presionado
         if(btnId == R.id.nav_focus){
-            replaceFragment(new FocusFragment());
-
+            newFragment = new FocusFragment();
+            newFragmentIndex = 0;
         } else if (btnId == R.id.nav_screetime) {
-            replaceFragment(new ScreenTimeFragment());
-
+            newFragment = new ScreenTimeFragment();
+            newFragmentIndex = 1;
         } else if (btnId == R.id.nav_leaderboard) {
-            replaceFragment(new LeaderboardFragment());
-
+            newFragment = new LeaderboardFragment();
+            newFragmentIndex = 2;
         } else if (btnId == R.id.nav_user) {
-            replaceFragment(new UserFragment());
-
+            newFragment = new UserFragment();
+            newFragmentIndex = 3;
         }
+        replaceFragment(newFragment, newFragmentIndex);
     }
 
-    private void replaceFragment(Fragment fragment){
-        fragmentManager.beginTransaction() //Empieza una nueva transaccion
+    private void replaceFragment(Fragment fragment, int newFragmentIndex){
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                /*Asignar animaciones personalizadas de res/anim
+                *
+                * Se elige la transición de acuerdo a la posición
+                * del fragmento (por medio del indice)
+                * */
+
+                /*
+                setCustomAnimations(enterAnim, exitAnim, porEnterAnim, popExitAnim)
+
+                - enterAnim: se activa al hacer "replace()" en el fragmento entrante.
+                - exitAnim:  se activa al hacer "replace()" en el fragmento saliente.
+
+                - popEnterAnim: se activa al hacer "pop" al fragmento actual para
+                  regresar al anterior (volver atrás), afecta al fragmento que reaparece.
+                - popEnterAnim: afecta al fragmento que desaparece.
+
+                */
+
+                if(newFragmentIndex > currentFragmentIndex){
+                    transaction.setCustomAnimations(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right
+                    );
+                }else {
+                    transaction.setCustomAnimations(
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right,
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                    );
+                }
+
                 //Se controla la creación de la instancia mediante "FragmentFactory"
-                .replace(R.id.fragmentContainerView, fragment, null)
+                transaction.replace(R.id.fragmentContainerView, fragment, null)
                 //Optimiza cambios de estado de los fragmentos involucrados en la transaccion
                 .setReorderingAllowed(true)
                 //Se confirma la transaccion a la pila de actividades
@@ -80,5 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addToBackStack("name")
                 //Ejecuta el cambio visual del fragmento, reemplaza el actual por el nuevo
                 .commit();
+
+                // Actualizar el indice del fragmento actual
+                currentFragmentIndex = newFragmentIndex;
     }
 }

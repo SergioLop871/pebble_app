@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -24,6 +25,12 @@ public class StatisticsFragment extends Fragment {
 
     private BarChart barChart;
     private ImageButton backButton;
+
+    //Botones del selector de esquema
+    private ImageButton schemeBtnLeftArrow, schemeBtnRightArrow;
+    private TextView schemeBtnToday, schemeBtnWeek, schemeBtnMonth, schemeBtnYear;
+
+    private int schemeSelectorIndex;
 
     private ArrayList<String> appNames = new ArrayList<>();
     private ArrayList<Integer> appUsageHours = new ArrayList<>();
@@ -55,6 +62,19 @@ public class StatisticsFragment extends Fragment {
         }
     }
 
+    void setScheme(String scheme){
+
+        if(scheme.equals("today")){
+            schemeBtnToday.setSelected(true);
+        } else if (scheme.equals("week")) {
+            schemeBtnWeek.setSelected(true);
+        } else if (scheme.equals("month")){
+            schemeBtnMonth.setSelected(true);
+        } else if (scheme.equals("year")) {
+            schemeBtnYear.setSelected(true);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +84,63 @@ public class StatisticsFragment extends Fragment {
         //ImageButton para regresar a ScreenTimeFragment
         backButton = view.findViewById(R.id.backArrowImgButton);
 
+        //Obtener los botones del selector de esquema
+        schemeBtnLeftArrow  = view.findViewById(R.id.schemeSelectorLeftArrow);
+        schemeBtnRightArrow = view.findViewById(R.id.schemeSelectorRightArrow);
+        schemeBtnToday = view.findViewById(R.id.schemeSelectorToday);
+        schemeBtnWeek  = view.findViewById(R.id.schemeSelectorWeek);
+        schemeBtnMonth = view.findViewById(R.id.schemeSelectorMonth);
+        schemeBtnYear  = view.findViewById(R.id.schemeSelectorYear);
+
+        //OnClickListener para los botones del selector de esquema
+        View.OnClickListener schemeClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int btnId = v.getId();
+                String[] schemesPositions = {"today", "week", "month", "year"};
+
+                schemeBtnToday.setSelected(false);
+                schemeBtnWeek.setSelected(false);
+                schemeBtnMonth.setSelected(false);
+                schemeBtnYear.setSelected(false);
+
+                if(btnId == R.id.schemeSelectorLeftArrow){
+                    schemeSelectorIndex--;
+                    if(schemeSelectorIndex < 0){
+                        schemeSelectorIndex = 3;
+                    }
+                    setScheme(schemesPositions[schemeSelectorIndex]);
+                } else if (btnId == R.id.schemeSelectorToday){
+                    setScheme(schemesPositions[0]);
+                } else if (btnId == R.id.schemeSelectorWeek) {
+                    setScheme(schemesPositions[1]);
+                } else if (btnId == R.id.schemeSelectorMonth) {
+                    setScheme(schemesPositions[2]);
+                } else if (btnId == R.id.schemeSelectorYear) {
+                    setScheme(schemesPositions[3]);
+                } else if (btnId == R.id.schemeSelectorRightArrow){
+                    schemeSelectorIndex++;
+                    if(schemeSelectorIndex > 3){
+                        schemeSelectorIndex = 0;
+                    }
+                    setScheme(schemesPositions[schemeSelectorIndex]);
+                }
+            }
+        };
+
+        //Botones del selector esquema
+        schemeBtnToday.setOnClickListener(schemeClickListener);
+        schemeBtnWeek.setOnClickListener(schemeClickListener);
+        schemeBtnMonth.setOnClickListener(schemeClickListener);
+        schemeBtnYear.setOnClickListener(schemeClickListener);
+        schemeBtnLeftArrow.setOnClickListener(schemeClickListener);
+        schemeBtnRightArrow.setOnClickListener(schemeClickListener);
+
+        //Dejar por defecto el esquema "Hoy"
+        schemeSelectorIndex = 0;
+        schemeBtnToday.setSelected(true);
+
+        //OnClickListener para el boton de regresar atras
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,21 +175,25 @@ public class StatisticsFragment extends Fragment {
             xValues.add(appName);
         }
 
+
         //Crear el datset
         BarDataSet barDataSet = new BarDataSet(barEntries, "Aplicaciones");
 
-        //
+
+        /*---------------------------------PERSONALIZACION----------------------------------------*/
+
+        //Asignar los colores para las barras
         barDataSet.setColors(
                 ContextCompat.getColor(requireContext(), R.color.pibbleLogoWater),
                 ContextCompat.getColor(requireContext(), R.color.pibbleLogoSand)
         );
 
+        barDataSet.setValueTextSize(14f); //Tamaño del texto de los valores de las barras (en dp)
+
         //Crear los datos para mostrar en la grafica
         BarData barData = new BarData(barDataSet);
         barChart.setData(barData);
 
-
-        /*---------------------------------PERSONALIZACION----------------------------------------*/
 
         //Eliminar el label de descripcion
         barChart.getDescription().setEnabled(false);
@@ -127,6 +208,7 @@ public class StatisticsFragment extends Fragment {
         yAxis.setAxisMaximum(24f);
         //Cambiar el color de los nombres de cada barra
         yAxis.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+
 
         //Configuracion de la linea del eje "Y"
         yAxis.setAxisLineWidth(2f);
@@ -153,8 +235,6 @@ public class StatisticsFragment extends Fragment {
         xAxis.setDrawGridLines(false);
         yAxis.setDrawGridLines(false);
         barChart.getAxisRight().setDrawGridLines(false);
-
-
         barChart.getAxisRight().setEnabled(false);
         barChart.getAxisRight().setDrawLabels(true);
 

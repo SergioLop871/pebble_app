@@ -15,4 +15,6 @@
     <color name="screenTimeInfoBackground">#D0D0D0</color>
     <color name="screenTimeInfoText">#293A6B</color>
 
+    <color name="schemeSelectedColor">#636262</color>
+
 </resources>
