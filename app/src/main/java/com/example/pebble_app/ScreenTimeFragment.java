@@ -69,21 +69,25 @@ public class ScreenTimeFragment extends Fragment{
             schemeInfoBtnRightArrow.setVisibility(View.INVISIBLE);
             schemeBtnToday.setSelected(true);
             schemeDateTextView.setText("Mar, 23 Sep");
+            schemeSelectorIndex = 0;
         } else if (scheme.equals("week")) {
             schemeInfoBtnLeftArrow.setVisibility(View.VISIBLE);
             schemeInfoBtnRightArrow.setVisibility(View.VISIBLE);
             schemeBtnWeek.setSelected(true);
             schemeDateTextView.setText("Mar, 23 sep - Mar, 30 sep");
+            schemeSelectorIndex = 1;
         } else if (scheme.equals("month")){
             schemeInfoBtnLeftArrow.setVisibility(View.VISIBLE);
             schemeInfoBtnRightArrow.setVisibility(View.VISIBLE);
             schemeBtnMonth.setSelected(true);
             schemeDateTextView.setText("Septiembre");
+            schemeSelectorIndex = 2;
         } else if (scheme.equals("year")) {
             schemeInfoBtnLeftArrow.setVisibility(View.VISIBLE);
             schemeInfoBtnRightArrow.setVisibility(View.VISIBLE);
             schemeBtnYear.setSelected(true);
             schemeDateTextView.setText("2025");
+            schemeSelectorIndex = 3;
         }
     }
 

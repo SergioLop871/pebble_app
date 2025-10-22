@@ -66,12 +66,16 @@ public class StatisticsFragment extends Fragment {
 
         if(scheme.equals("today")){
             schemeBtnToday.setSelected(true);
+            schemeSelectorIndex = 0;
         } else if (scheme.equals("week")) {
             schemeBtnWeek.setSelected(true);
+            schemeSelectorIndex = 1;
         } else if (scheme.equals("month")){
             schemeBtnMonth.setSelected(true);
+            schemeSelectorIndex = 2;
         } else if (scheme.equals("year")) {
             schemeBtnYear.setSelected(true);
+            schemeSelectorIndex = 3;
         }
     }
 
