@@ -1,7 +1,6 @@
 package com.example.pebble_app;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 

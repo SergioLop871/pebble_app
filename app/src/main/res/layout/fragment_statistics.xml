@@ -131,6 +131,16 @@
             app:layout_constraintStart_toStartOf="@+id/verticalGuideLine1"
             app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine5" />
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/statisticsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
+            app:layout_constraintEnd_toStartOf="@id/verticalGuideLine3"
+            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine7"
+            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine8"/>
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/verticalGuideLine1"
             android:layout_width="wrap_content"
@@ -193,6 +203,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.472" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.50" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.90" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +34,17 @@ public class StatisticsFragment extends Fragment {
 
     private int schemeSelectorIndex;
 
+    //Variable para crear el recyclerView
+    RecyclerView recyclerView;
+
+    //Variable para crear el adaptador del recyclerView
+    AppStatisticsRecyclerViewAdapter adapter;
+
     private ArrayList<String> appNames = new ArrayList<>();
     private ArrayList<Integer> appUsageHours = new ArrayList<>();
+
+    //ArrayList para crear los elementos del recyclerView
+    ArrayList<AppStatisticsRowModel> appStatisticsRowModels = new ArrayList<>();
 
     //Si se crea el la instancia si parametros
     public StatisticsFragment() {
@@ -62,7 +73,19 @@ public class StatisticsFragment extends Fragment {
         }
     }
 
-    void setScheme(String scheme){
+    //--------------Metodo para crear una nueva fila de información de una app en el recyclerView
+    //-Cambiar despues para obtener la información real
+    private void createNewAppStatisticsRowModel(String appName, String appType, int appHours){
+        int defaultIcon = R.drawable.outline_question_mark_24;
+        int defaultState = R.drawable.outline_lock_24;
+        AppStatisticsRowModel newRow = new AppStatisticsRowModel(appName, appType, appHours,
+                defaultIcon, defaultState);
+
+        appStatisticsRowModels.add(newRow);
+
+    }
+
+    private void setScheme(String scheme){
 
         if(scheme.equals("today")){
             schemeBtnToday.setSelected(true);
@@ -95,6 +118,9 @@ public class StatisticsFragment extends Fragment {
         schemeBtnWeek  = view.findViewById(R.id.schemeSelectorWeek);
         schemeBtnMonth = view.findViewById(R.id.schemeSelectorMonth);
         schemeBtnYear  = view.findViewById(R.id.schemeSelectorYear);
+
+        //Obtener el RecyclerView del layout
+        recyclerView = view.findViewById(R.id.statisticsRecyclerView);
 
         //OnClickListener para los botones del selector de esquema
         View.OnClickListener schemeClickListener = new View.OnClickListener() {
@@ -169,7 +195,10 @@ public class StatisticsFragment extends Fragment {
 
         for(int i = 0; i < appNames.size(); i++){
             String appName = appNames.get(i);
-            float appHours = appUsageHours.get(i);
+            int appHours = appUsageHours.get(i);
+
+            //Crear fila para el recyclerView con el metodo creado
+            createNewAppStatisticsRowModel(appName, "Distractor", appHours);
 
             // BarEntry(index, appHours)
             BarEntry barEntry = new BarEntry(i, appHours);
@@ -178,7 +207,6 @@ public class StatisticsFragment extends Fragment {
             barEntries.add(barEntry);
             xValues.add(appName);
         }
-
 
         //Crear el datset
         BarDataSet barDataSet = new BarDataSet(barEntries, "Aplicaciones");
@@ -245,6 +273,11 @@ public class StatisticsFragment extends Fragment {
 
         //Actualizar la grafica con los datos
         barChart.invalidate();
+
+        //Crear el adapter para el recyclerView
+        adapter = new AppStatisticsRecyclerViewAdapter(requireContext(), appStatisticsRowModels);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         return view;
     }

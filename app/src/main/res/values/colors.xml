@@ -17,4 +17,6 @@
 
     <color name="schemeSelectedColor">#636262</color>
 
+    <color name="red">#F21919</color>
+
 </resources>
