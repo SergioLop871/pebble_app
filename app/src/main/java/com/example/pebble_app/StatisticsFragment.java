@@ -175,7 +175,7 @@ public class StatisticsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Esto hace que regrese al fragmento anterior
-                requireActivity().getSupportFragmentManager().popBackStack();
+                getParentFragmentManager().popBackStack();
             }
         });
 

@@ -28,12 +28,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         //Obtener acceso al FragmentManager
         fragmentManager = getSupportFragmentManager();
 
         //Crear una instancia de cada fragmento
         focusFragment       = new FocusFragment();
-        screenTimeFragment  = new ScreenTimeFragment();
+        screenTimeFragment  = new ScreenTimeContainerFragment();
         leaderboardFragment = new LeaderboardFragment();
         userFragment        = new UserFragment();
 
@@ -56,11 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         * Inicializar el primer fragmento para que sea visible y poder agregar
         * u ocultar y mostrar los otros fragmentos al usar el navbar
         *
-        * NOTA: Usar un thread preferentemente para inicializar los fragmentos y
-        * evitar el navbar quede inutilizable por unos segundos al iniciar la
-        * app
         * */
-        setUpInitialFragment();
+
+        setUpFragments();
+
     }
 
     @Override
@@ -96,9 +97,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Metodo para inicializar los fragmentos y conservar su estado al "esconderlos"
-    private void setUpInitialFragment(){
+    private void setUpFragments() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.fragmentContainerView, focusFragment, "focus");
+        transaction.add(R.id.fragmentContainerView, focusFragment, "focusFContainer");
+        transaction.add(R.id.fragmentContainerView, screenTimeFragment, "screenTimeFContainer");
+        transaction.add(R.id.fragmentContainerView, leaderboardFragment, "leaderboardFContainer");
+        transaction.add(R.id.fragmentContainerView, userFragment, "userFContainer");
+
+        transaction.hide(screenTimeFragment);
+        transaction.hide(leaderboardFragment);
+        transaction.hide(userFragment);
+
+        transaction.commit();
     }
 
     //Obtener fragmento por el indice en el navbar
@@ -153,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 Fragment currentFragment = getFragmentByIndex(currentFragmentIndex);
 
+                /*
                 if(!fragment.isAdded()){
                     transaction.hide(currentFragment)
                             .add(R.id.fragmentContainerView, fragment);
@@ -161,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     transaction.show(fragment);
                 }
 
+                 */
+
+                transaction.hide(getFragmentByIndex(currentFragmentIndex));
+                transaction.show(fragment);
                 transaction.commit();
 
                 /*

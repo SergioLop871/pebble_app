@@ -31,6 +31,9 @@ public class ScreenTimeFragment extends Fragment{
     // Atributo para gráfica de pastel
     private PieChart pieChart;
 
+    //Para almacenar una sola instancia de statisticsFragment
+    Fragment statisticsFragment;
+
     /*ArrayLists temporales para ver el funcionamiento del
     * paso de un bundle (info) del fragmento de ScreenTime a
     * Statistics*/
@@ -112,6 +115,9 @@ public class ScreenTimeFragment extends Fragment{
 
         schemeDateTextView = view.findViewById(R.id.schemeDateInfo);
 
+        //Crear una sola instancia de statisticsFragment
+        statisticsFragment = new StatisticsFragment();
+
         //OnClickListener para los botones del selector de esquema
         View.OnClickListener schemeClickListener = new View.OnClickListener() {
             @Override
@@ -175,14 +181,14 @@ public class ScreenTimeFragment extends Fragment{
             @Override
             public void onClick(View v) {
 
-                //Crear el fragmento nuevo para la transición
-                Fragment statisticsFragment = new StatisticsFragment();
+                //Crear el fragmento en caso de no existir
+                if(statisticsFragment == null){
+                    statisticsFragment = new StatisticsFragment();
+                }
 
                 //Crear la transición
-                FragmentTransaction transaction = requireActivity()
-                        .getSupportFragmentManager()
+                FragmentTransaction transaction = getParentFragmentManager()
                         .beginTransaction();
-
 
                 //Crear el bundle para pasar al fragmento
                 Bundle infoApps = new Bundle();
