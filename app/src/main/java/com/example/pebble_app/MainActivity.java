@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fragmentManager = getSupportFragmentManager();
 
         //Crear una instancia de cada fragmento
-        focusFragment       = new FocusFragment();
+        focusFragment       = new FocusContainerFragment();
         screenTimeFragment  = new ScreenTimeContainerFragment();
         leaderboardFragment = new LeaderboardFragment();
         userFragment        = new UserFragment();

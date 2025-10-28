@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
 
@@ -35,13 +36,15 @@ public class FocusFragment extends Fragment {
     private String mParam2;
 
     //Variable para crear el recyclerView
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
     //Variable para crear el adaptador del recyclerView
-    FocusModesRecyclerViewAdapter adapter;
+    private FocusModesRecyclerViewAdapter adapter;
 
     //ArrayList para crear los elementos del recyclerView
-    ArrayList<FocusModesRowModel> focusModesRowModels = new ArrayList<>();
+    private ArrayList<FocusModesRowModel> focusModesRowModels = new ArrayList<>();
+
+    private ImageButton streakDescriptionBtn, settingsBtn, createModeBtn;
 
 
     //Constructor vacio
@@ -121,11 +124,6 @@ public class FocusFragment extends Fragment {
         focusModesRowModels.add(newMode);
     }
 
-
-
-
-
-
     /* Creacion visual del fragmento (interfaz grafica)
     *
     * Se conectan los elementos (buttons, textview, etc) con
@@ -139,6 +137,22 @@ public class FocusFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_focus, container, false);
 
         recyclerView = view.findViewById(R.id.focusModesRecyclerView);
+
+        //Definición de los botones
+        streakDescriptionBtn = view.findViewById(R.id.streakDescriptionButton);
+        settingsBtn = view.findViewById(R.id.settingsButton);
+        createModeBtn = view.findViewById(R.id.createModeButton);
+
+        streakDescriptionBtn.setOnClickListener(v -> {
+            StreakDescriptionDialogFragment dialog = new StreakDescriptionDialogFragment();
+            dialog.show(getChildFragmentManager(), "streakDescriptionDialog");
+        });
+
+        createModeBtn.setOnClickListener(v -> {
+            ChooseModeDialogFragment dialog = new ChooseModeDialogFragment();
+            dialog.show(getChildFragmentManager(), "chooseModeDialog");
+        });
+
 
         //Idea: crear un nuevo fragmento para ir al presionar el boton para añadir
         //Crear los nuevos modos (ejemplo)
