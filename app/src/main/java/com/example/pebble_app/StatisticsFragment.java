@@ -82,7 +82,6 @@ public class StatisticsFragment extends Fragment {
                 defaultIcon, defaultState);
 
         appStatisticsRowModels.add(newRow);
-
     }
 
     private void setScheme(String scheme){
