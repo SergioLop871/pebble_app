@@ -21,4 +21,7 @@
 
     <color name="focusModeCardBg">#454545</color>
 
+    <color name="focusCustomInputBg">#383838</color>
+    <color name="focusCustomInputHintColor">#9B9B9B</color>
+
 </resources>

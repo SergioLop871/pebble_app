@@ -24,7 +24,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="0dp"
                 android:layout_weight="2"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="start"
                 android:text="Enfoque"
                 android:textColor="@color/white"
@@ -113,8 +113,6 @@
                     android:src="@drawable/baseline_add_circle_24"
                     app:tint="@color/pibbleLogoWater"/>
             </androidx.cardview.widget.CardView>
-
-
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -125,7 +123,6 @@
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLine2"
             app:layout_constraintTop_toTopOf="@id/horizontalGuideLine3"
             app:layout_constraintBottom_toTopOf="@id/horizontalGuideLineEnd"/>
-
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/verticalGuideLine1"

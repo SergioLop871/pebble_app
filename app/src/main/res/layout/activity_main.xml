@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgBlack"
     tools:context=".MainActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="false">
 
     <FrameLayout
         android:layout_width="0dp"
@@ -26,14 +26,13 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bottomNavCardView"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/bgNav"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        >
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLineEnd"
+        app:layout_constraintEnd_toEndOf="@id/verticalGuideLineEnd"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,5 +89,34 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideLine1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.134" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideLineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.865" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.91" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.975" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

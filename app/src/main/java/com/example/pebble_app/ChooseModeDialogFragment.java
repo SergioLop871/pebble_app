@@ -1,5 +1,6 @@
 package com.example.pebble_app;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,44 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class ChooseModeDialogFragment extends DialogFragment {
+
+    /*Se crea una interfaz para poder comunicarse con
+    * FocusFragmentContainer a traves de FocusFragment
+    * y poder realizar la transacción hacia
+    * CreateFocusSessionFragment y
+    * CreateFocusTimerFragment (Aun no implementado)
+    *  */
+    public interface OnModeSelectedListener{
+        void onModeSelected(String mode);
+    }
+
+    /*
+    * Este atributo/variable sirve para guardar una referencia
+    * a la instancia FocusFragment, cuando se crea en
+    * tiempo de ejecución
+    * */
+    private OnModeSelectedListener listener;
+
+    /*Sobrescribir el metodo onAttach
+    * de la clase Fragment para obtener el contexto,
+    * el contexo sera el Fragmento que contiene al
+    * DialogFragment, que es "FocusFragment"
+    * */
+    @Override
+    public void onAttach(@NonNull Context context){
+        super.onAttach(context);
+        Fragment parent = getParentFragment(); //Obtener la instancia de FocusFragment creada
+
+        //Verificar si la instancia implementa la interfaz
+        if(parent instanceof OnModeSelectedListener){
+            //Se castea la instancia para indicar al compilador que esta usa la interfaz
+            listener = (OnModeSelectedListener) parent;
+        }
+    }
 
     @Nullable
     @Override
@@ -33,8 +70,10 @@ public class ChooseModeDialogFragment extends DialogFragment {
         });
 
         sessionBtn.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Modo Sesión seleccionado", Toast.LENGTH_SHORT).show();
-            dismiss(); // cerrar el diálogo
+            if (listener != null) {
+                listener.onModeSelected("session");
+            }
+            dismiss();
         });
 
         timerBtn.setOnClickListener(v -> {
