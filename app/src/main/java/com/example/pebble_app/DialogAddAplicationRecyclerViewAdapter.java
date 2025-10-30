@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class DialogAddAplicationRecyclerViewAdapter
         extends RecyclerView.Adapter<DialogAddAplicationRecyclerViewAdapter.MyViewHolder> {
 
+    //Se crea una interfaz para poder comunicarse con CreateFocusSessionFragment
     public interface OnCheckBoxSellected{
         void onChecked(String applicactionName);
         void onUnchecked(String applicationName);
@@ -30,8 +31,12 @@ public class DialogAddAplicationRecyclerViewAdapter
 
     private ArrayList<String> selectedApps;
 
+    //ArrayList para el funcionamiento del buscador en AddAplicationDialogFragment
+    private  ArrayList<DialogAddAplicationRowModel> fullList;
+
     /*Constructor para obtener el contexto y el ArrayList con las applicaciones
-    obtenidas de AddAplicationDialogFragment
+    obtenidas de AddAplicationDialogFragment,
+    Se pasa el listener que representa a CreateFocusSessionFragment
     */
     public DialogAddAplicationRecyclerViewAdapter(Context context,
                                             ArrayList<DialogAddAplicationRowModel> dialogAddAplicationRowModels,
@@ -42,6 +47,9 @@ public class DialogAddAplicationRecyclerViewAdapter
         this.dialogAddAplicationRowModels = dialogAddAplicationRowModels;
         this.selectedApps = selectedApps;
         this.listener = listener;
+
+        //Guardar copia del la lista original
+        this.fullList = new ArrayList<>(dialogAddAplicationRowModels);
     }
 
 
@@ -89,23 +97,21 @@ public class DialogAddAplicationRecyclerViewAdapter
         holder.appNameTV.setText(appName);
         holder.appIconIV.setImageResource(dialogAddAplicationRowModels.get(position)
                 .getAppIcon());
-        holder.appSelectedCB.setChecked(dialogAddAplicationRowModels.get(position)
-                .getAppSelected());
 
+        //Asignar el valor al checkbox como "Checked" si esta en la lista "selectedApps"
         if(selectedApps.contains(appName)){
             holder.appSelectedCB.setChecked(true);
         } else {
           holder.appSelectedCB.setChecked(false);
         }
 
-        //Listener para detectar si se chequea el checkbox
-        holder.appSelectedCB.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked){
+        //Añadir un listener para identificar cuando se hace click al checkbox
+        holder.appSelectedCB.setOnClickListener(v -> {
+            if(holder.appSelectedCB.isChecked()){
                 listener.onChecked(appName);
             }else{
                 listener.onUnchecked(appName);
             }
-
         });
 
         cardView.setLayoutParams(params);
@@ -136,6 +142,35 @@ public class DialogAddAplicationRecyclerViewAdapter
             appSelectedCB = itemView.findViewById(R.id.dialogAddAplicationCheckBox);
 
         }
+    }
+
+    //Métdo para filtrar según el texto del buscador
+    public void filter(String text){
+        dialogAddAplicationRowModels.clear(); //Borrar las filas
+
+        if(text == null || text.trim().isEmpty()){
+            //Si el texto del buscador esta vacio
+            dialogAddAplicationRowModels.addAll(fullList); //Añadir la lista completa
+        } else {
+            //Si el usuario escribio algo
+            String lowerCaseText = text.toLowerCase();
+            for(DialogAddAplicationRowModel rowModel : fullList){
+                if(rowModel.getAppName().toLowerCase().contains(lowerCaseText)){
+                    dialogAddAplicationRowModels.add(rowModel);
+                }
+            }
+            //Cambiar el estado del rowmodel si se encuentra en la lista de apps seleccionadas
+            for(DialogAddAplicationRowModel rowModel : dialogAddAplicationRowModels){
+                rowModel.setAppSelected(selectedApps.contains(rowModel.getAppName()));
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void updateSelectedApps(ArrayList<String> updatedList) {
+        this.selectedApps = updatedList;
+        notifyDataSetChanged();
     }
 
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,9 @@ public class CreateFocusSessionFragment extends Fragment
     //ArrayList para pasar las aplicaciones dentro del chipGroup a AddAplicationDialogFragment
     ArrayList<String> selectedApps = new ArrayList<>();
 
+    //Almacenar el dialogo para actualizar las aplicaciones seleccionadas en tiempo real
+    AddAplicationDialogFragment dialog;
+
     public CreateFocusSessionFragment() {
         // Required empty public constructor
     }
@@ -43,11 +47,15 @@ public class CreateFocusSessionFragment extends Fragment
         //Crear una chip
         inflater = LayoutInflater.from(requireContext());
         if(inflater != null || chipGroup == null || !isAdded()){
-            Chip chip = (Chip) inflater.inflate(R.layout.item_chip, chipGroup,false);
+            Chip chip = (Chip) inflater.inflate(R.layout.create_session_item_chip, chipGroup,false);
             chip.setText(applicationName); //Asginar el nombre de la app
             chip.setTag(applicationName);
             chip.setOnCloseIconClickListener(v -> chipGroup.removeView(chip));
             chipGroup.addView(chip);
+
+            //Añadir la app a la lista y actualizar en el dialogo
+            selectedApps.add(applicationName);
+            dialog.setSelectedApps(selectedApps);
         }
     }
 
@@ -59,7 +67,12 @@ public class CreateFocusSessionFragment extends Fragment
             if(child instanceof Chip){
                 Chip chip = (Chip) child;
                 if(applicationName.equals(chip.getTag())){
+                    Log.d("onUnchecked", "Chip a eliminar: " + chip.getTag());
                     chipGroup.removeView(chip);
+
+                    //Borrar la app de la lista y actualizar en el dialogo
+                    selectedApps.remove(applicationName);
+                    dialog.setSelectedApps(selectedApps);
                     break;
                 }
             }
@@ -84,7 +97,7 @@ public class CreateFocusSessionFragment extends Fragment
 
         //Boton para crear el dialogFragment de añadir apps
         addAplicationBtn.setOnClickListener(v -> {
-            AddAplicationDialogFragment dialog = new AddAplicationDialogFragment();
+            dialog = new AddAplicationDialogFragment();
 
             selectedApps.clear();
 

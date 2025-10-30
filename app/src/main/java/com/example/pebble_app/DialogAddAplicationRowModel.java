@@ -23,4 +23,8 @@ public class DialogAddAplicationRowModel {
     public Boolean getAppSelected() {
         return appSelected;
     }
+
+    public void setAppSelected(Boolean appSelected) {
+        this.appSelected = appSelected;
+    }
 }

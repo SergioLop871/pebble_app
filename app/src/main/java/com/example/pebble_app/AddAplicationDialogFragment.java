@@ -2,9 +2,13 @@ package com.example.pebble_app;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -27,7 +31,11 @@ public class AddAplicationDialogFragment extends DialogFragment {
 
     private RecyclerView recyclerView;
 
-    private ImageView backBtn;
+    private ImageView backBtn, deleteTextBtn;
+
+    private EditText searchET;
+
+
 
     //Fragmeto padre
     private Fragment parent;
@@ -68,12 +76,11 @@ public class AddAplicationDialogFragment extends DialogFragment {
         recyclerView = view.findViewById(R.id.addAppRecyclerView);
 
         backBtn = view.findViewById(R.id.backButton);
+        searchET = view.findViewById(R.id.searchEditText);
+        deleteTextBtn = view.findViewById(R.id.deleteTextButton);
+        deleteTextBtn.setVisibility(View.INVISIBLE);
 
-        backBtn.setOnClickListener(v -> {
-            //Cerrar la ventana de dialogo
-            dismiss();
-        });
-
+        //Inicializar la lista de aplicaciones
         setUpAplicationRowModels();
 
         //Pasar el Fragmento al construir el adaptador
@@ -84,6 +91,44 @@ public class AddAplicationDialogFragment extends DialogFragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+
+        backBtn.setOnClickListener(v -> {
+            //Cerrar la ventana de dialogo
+            dismiss();
+        });
+
+        //Para saber cuando el usuario escribe un caracter
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(searchET.length() > 0){
+                    deleteTextBtn.setVisibility(View.VISIBLE);
+                } else {
+                    deleteTextBtn.setVisibility(View.INVISIBLE);
+                }
+                String text = searchET.getText().toString();
+                adapter.filter(text);
+                adapter.updateSelectedApps(selectedApps);
+                Log.d("EditText", "Texto escrito: " + text);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
+
+        deleteTextBtn.setOnClickListener(v -> {
+            searchET.setText("");
+        });
+
+
 
         return view;
     }
