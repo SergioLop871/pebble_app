@@ -405,7 +405,29 @@ bloqueo de aplicaciones de manera rutinaria."
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLineEnd"
             app:layout_constraintTop_toTopOf="@id/horizontalGuideLine15"
-            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine16"/>
+            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine16">
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/appChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </LinearLayout>
+            </ScrollView>
+        </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/createModeButton"

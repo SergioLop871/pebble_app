@@ -24,4 +24,7 @@
     <color name="focusCustomInputBg">#383838</color>
     <color name="focusCustomInputHintColor">#9B9B9B</color>
 
+    <color name="bgGray">#4E5256</color>
+
+
 </resources>

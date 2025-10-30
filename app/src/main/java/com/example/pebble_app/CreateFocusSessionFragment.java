@@ -7,54 +7,62 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreateFocusSessionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class CreateFocusSessionFragment extends Fragment {
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.util.ArrayList;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class CreateFocusSessionFragment extends Fragment
+        implements DialogAddAplicationRecyclerViewAdapter.OnCheckBoxSellected {
 
+    //Botón para volver a FocusFragment
     ImageButton backBtn;
+
+    //LayoutInflater para colocar una chip en el chipgroup de apps
+    LayoutInflater inflater;
+
+    //Para obtener el chipGroup del layout
+    ChipGroup chipGroup;
+
+    //Botones del layout
+    Button addAplicationBtn, createSessionBtn;
+
+    //ArrayList para pasar las aplicaciones dentro del chipGroup a AddAplicationDialogFragment
+    ArrayList<String> selectedApps = new ArrayList<>();
 
     public CreateFocusSessionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreateFocusSessionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CreateFocusSessionFragment newInstance(String param1, String param2) {
-        CreateFocusSessionFragment fragment = new CreateFocusSessionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    //Metodo para crear un chip en el chipGroup
+    @Override
+    public void onChecked(String applicationName){
+        //Crear una chip
+        inflater = LayoutInflater.from(requireContext());
+        if(inflater != null || chipGroup == null || !isAdded()){
+            Chip chip = (Chip) inflater.inflate(R.layout.item_chip, chipGroup,false);
+            chip.setText(applicationName); //Asginar el nombre de la app
+            chip.setTag(applicationName);
+            chip.setOnCloseIconClickListener(v -> chipGroup.removeView(chip));
+            chipGroup.addView(chip);
+        }
     }
 
+    //Metodo para eliminar un chip del chipGroup
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public void onUnchecked(String applicationName){
+        for(int i = 0; i < chipGroup.getChildCount(); i++){
+            View child = chipGroup.getChildAt(i);
+            if(child instanceof Chip){
+                Chip chip = (Chip) child;
+                if(applicationName.equals(chip.getTag())){
+                    chipGroup.removeView(chip);
+                    break;
+                }
+            }
         }
     }
 
@@ -65,11 +73,36 @@ public class CreateFocusSessionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_focus_session, container, false);
 
         backBtn = view.findViewById(R.id.goBackButton);
+        addAplicationBtn = view.findViewById(R.id.addAppsButton);
+        createSessionBtn = view.findViewById(R.id.createModeButton);
 
+        //Boton de volver
         backBtn.setOnClickListener(v -> {
-            // Esto hace que regrese al fragmento anterior
+            //Regresar al fragmento anterior
             getParentFragmentManager().popBackStack();
         });
+
+        //Boton para crear el dialogFragment de añadir apps
+        addAplicationBtn.setOnClickListener(v -> {
+            AddAplicationDialogFragment dialog = new AddAplicationDialogFragment();
+
+            selectedApps.clear();
+
+            for(int i = 0; i < chipGroup.getChildCount(); i++){
+                View child = chipGroup.getChildAt(i);
+                if(child instanceof Chip){
+                    Chip chip = (Chip) child;
+                    selectedApps.add(chip.getText().toString());
+                }
+            }
+
+            //Pasar los nombres de apps al dialogo
+            dialog.setSelectedApps(selectedApps);
+
+            dialog.show(getChildFragmentManager(), "addAplicationDialog");
+        });
+
+        chipGroup = view.findViewById(R.id.appChipGroup);
 
         return view;
     }
