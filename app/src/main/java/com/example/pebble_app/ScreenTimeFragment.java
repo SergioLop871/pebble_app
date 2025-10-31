@@ -174,7 +174,7 @@ public class ScreenTimeFragment extends Fragment{
         pieChart = view.findViewById(R.id.pie_chart);
 
         // Crear objeto AppUsageStatics
-        AppUsageStatistics appUsageStatistics = new AppUsageStatistics(requireContext());
+        AppUsageStatistics appUsageStatistics = new AppUsageStatistics(requireContext(), this);
 
         //---------------------OnClickListener para ir a "StatisticsFragment"-----------------------
         pieChart.setOnClickListener(new View.OnClickListener() {
