@@ -26,5 +26,6 @@
 
     <color name="bgGray">#4E5256</color>
 
+    <color name="dayButtonSelected">#626262</color>
 
 </resources>

@@ -237,6 +237,7 @@ bloqueo de aplicaciones de manera rutinaria."
                     />
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/setHoursRangeButton"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
@@ -244,12 +245,12 @@ bloqueo de aplicaciones de manera rutinaria."
                     app:cardBackgroundColor="@color/focusCustomInputBg">
 
                     <TextView
-                        android:id="@+id/textView12"
+                        android:id="@+id/timeRangeTextView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="10 PM - 6 AM"
+                        android:layout_height="match_parent"
+                        android:text="8 AM - 9 AM"
                         android:autoSizeTextType="uniform"
-                        android:autoSizeMinTextSize="12sp"
+                        android:autoSizeMinTextSize="15sp"
                         android:autoSizeMaxTextSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/white"
@@ -306,75 +307,148 @@ bloqueo de aplicaciones de manera rutinaria."
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp">
 
-                        <Button
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysSundayButton"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="D"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@color/focusCustomInputHintColor"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
 
-                        <Button
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="D"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
+
+
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysMondayButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="L"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@android:color/transparent"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
 
-                        <Button
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="L"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysTuesdayButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="M"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@android:color/transparent"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
 
-                        <Button
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="M"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysWednesdayButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="X"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@android:color/transparent"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
 
-                        <Button
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="X"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysThursdayButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="J"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@android:color/transparent"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
 
-                        <Button
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="J"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysFridayButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="V"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@android:color/transparent"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
 
-                        <Button
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="V"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/daysSaturdayButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="S"
-                            android:padding="0dp"
-                            android:autoSizeTextType="uniform"
-                            android:backgroundTint="@android:color/transparent"/>
+                            app:cardBackgroundColor="@color/day_button_selector"
+                            app:cardCornerRadius="30dp"
+                            app:cardElevation="0dp">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="S"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:autoSizeTextType="uniform"/>
+
+                        </androidx.cardview.widget.CardView>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 

@@ -17,4 +17,16 @@
         <item name="closeIcon">@drawable/outline_close_24</item>
     </style>
 
+    <style name="NumberPickerTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/white</item>
+
+        <!-- To remove divider -->
+        <item name="colorControlNormal">@android:color/transparent</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">30sp</item>
+
+    </style>
+    
 </resources>

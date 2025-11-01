@@ -1,12 +1,12 @@
 package com.example.pebble_app;
 
-public class DialogAddAplicationRowModel {
+public class AddAplicationDialogRowModel {
 
     String appName;
     int appIcon;
     Boolean appSelected;
 
-    public DialogAddAplicationRowModel(String appName, int appIcon, Boolean appSelected){
+    public AddAplicationDialogRowModel(String appName, int appIcon, Boolean appSelected){
         this.appName = appName;
         this.appIcon = appIcon;
         this.appSelected = appSelected;

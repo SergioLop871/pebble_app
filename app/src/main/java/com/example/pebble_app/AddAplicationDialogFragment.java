@@ -24,10 +24,10 @@ public class AddAplicationDialogFragment extends DialogFragment {
 
 
     //Lista para mostrar las aplicaciones existentes
-    private ArrayList<DialogAddAplicationRowModel> dialogAddAplicationRowModels = new ArrayList<>();
+    private ArrayList<AddAplicationDialogRowModel> addAplicationDialogRowModels = new ArrayList<>();
 
     //Adaptador para manejar la lista de apps
-    private DialogAddAplicationRecyclerViewAdapter adapter;
+    private AddAplicationDialogRecyclerViewAdapter adapter;
 
     private RecyclerView recyclerView;
 
@@ -51,9 +51,9 @@ public class AddAplicationDialogFragment extends DialogFragment {
         for(int i = 0; i < 4; i++){
             int defaultIcon = R.drawable.outline_question_mark_24;
             String appName = "App " + (i + 1);
-            DialogAddAplicationRowModel model =
-                    new DialogAddAplicationRowModel(appName, defaultIcon, false);
-            dialogAddAplicationRowModels.add(model);
+            AddAplicationDialogRowModel model =
+                    new AddAplicationDialogRowModel(appName, defaultIcon, false);
+            addAplicationDialogRowModels.add(model);
         }
     }
 
@@ -84,10 +84,10 @@ public class AddAplicationDialogFragment extends DialogFragment {
         setUpAplicationRowModels();
 
         //Pasar el Fragmento al construir el adaptador
-        adapter = new DialogAddAplicationRecyclerViewAdapter(getContext(),
-                dialogAddAplicationRowModels,
+        adapter = new AddAplicationDialogRecyclerViewAdapter(getContext(),
+                addAplicationDialogRowModels,
                 selectedApps,
-                (DialogAddAplicationRecyclerViewAdapter.OnCheckBoxSellected) parent);
+                (AddAplicationDialogRecyclerViewAdapter.OnCheckBoxSellected) parent);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

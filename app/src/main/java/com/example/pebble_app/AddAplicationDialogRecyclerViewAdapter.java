@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class DialogAddAplicationRecyclerViewAdapter
-        extends RecyclerView.Adapter<DialogAddAplicationRecyclerViewAdapter.MyViewHolder> {
+public class AddAplicationDialogRecyclerViewAdapter
+        extends RecyclerView.Adapter<AddAplicationDialogRecyclerViewAdapter.MyViewHolder> {
 
     //Se crea una interfaz para poder comunicarse con CreateFocusSessionFragment
     public interface OnCheckBoxSellected{
@@ -27,36 +27,36 @@ public class DialogAddAplicationRecyclerViewAdapter
     private OnCheckBoxSellected listener;
     //Contexto y ArrayList para el constructor
     private Context context;
-    private ArrayList<DialogAddAplicationRowModel> dialogAddAplicationRowModels;
+    private ArrayList<AddAplicationDialogRowModel> addAplicationDialogRowModels;
 
     private ArrayList<String> selectedApps;
 
     //ArrayList para el funcionamiento del buscador en AddAplicationDialogFragment
-    private  ArrayList<DialogAddAplicationRowModel> fullList;
+    private  ArrayList<AddAplicationDialogRowModel> fullList;
 
     /*Constructor para obtener el contexto y el ArrayList con las applicaciones
     obtenidas de AddAplicationDialogFragment,
     Se pasa el listener que representa a CreateFocusSessionFragment
     */
-    public DialogAddAplicationRecyclerViewAdapter(Context context,
-                                            ArrayList<DialogAddAplicationRowModel> dialogAddAplicationRowModels,
+    public AddAplicationDialogRecyclerViewAdapter(Context context,
+                                                  ArrayList<AddAplicationDialogRowModel> addAplicationDialogRowModels,
                                                   ArrayList<String> selectedApps,
                                                   OnCheckBoxSellected listener)
     {
         this.context = context;
-        this.dialogAddAplicationRowModels = dialogAddAplicationRowModels;
+        this.addAplicationDialogRowModels = addAplicationDialogRowModels;
         this.selectedApps = selectedApps;
         this.listener = listener;
 
         //Guardar copia del la lista original
-        this.fullList = new ArrayList<>(dialogAddAplicationRowModels);
+        this.fullList = new ArrayList<>(addAplicationDialogRowModels);
     }
 
 
     //Metodos creados para el funcionamiento del Adaptador del RecyclerView
     @NonNull
     @Override
-    public DialogAddAplicationRecyclerViewAdapter.MyViewHolder
+    public AddAplicationDialogRecyclerViewAdapter.MyViewHolder
     onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Metodo creado para inflar el layout
 
@@ -64,11 +64,11 @@ public class DialogAddAplicationRecyclerViewAdapter
         View view = inflater.inflate(R.layout.add_app_dialog_recycler_view_row,
                 parent, false);
 
-        return new DialogAddAplicationRecyclerViewAdapter.MyViewHolder(view);
+        return new AddAplicationDialogRecyclerViewAdapter.MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DialogAddAplicationRecyclerViewAdapter.MyViewHolder holder,
+    public void onBindViewHolder(@NonNull AddAplicationDialogRecyclerViewAdapter.MyViewHolder holder,
                                  int position) {
         /* Metodo para asignar los valores a las vistas que sean visibles dentro
          *  del recyclerView (en pantalla) usando el layout de add_app_dialog_recycler_view_row
@@ -91,11 +91,11 @@ public class DialogAddAplicationRecyclerViewAdapter
         }
 
         //Asignar los valores de cada elemento creado
-        String appName = dialogAddAplicationRowModels.get(position)
+        String appName = addAplicationDialogRowModels.get(position)
                 .getAppName();
 
         holder.appNameTV.setText(appName);
-        holder.appIconIV.setImageResource(dialogAddAplicationRowModels.get(position)
+        holder.appIconIV.setImageResource(addAplicationDialogRowModels.get(position)
                 .getAppIcon());
 
         //Asignar el valor al checkbox como "Checked" si esta en la lista "selectedApps"
@@ -120,7 +120,7 @@ public class DialogAddAplicationRecyclerViewAdapter
     @Override
     public int getItemCount() {
         //Metodo para contar los elementos que hay total dentro del recyclerView
-        return dialogAddAplicationRowModels.size();
+        return addAplicationDialogRowModels.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
@@ -146,21 +146,21 @@ public class DialogAddAplicationRecyclerViewAdapter
 
     //Métdo para filtrar según el texto del buscador
     public void filter(String text){
-        dialogAddAplicationRowModels.clear(); //Borrar las filas
+        addAplicationDialogRowModels.clear(); //Borrar las filas
 
         if(text == null || text.trim().isEmpty()){
             //Si el texto del buscador esta vacio
-            dialogAddAplicationRowModels.addAll(fullList); //Añadir la lista completa
+            addAplicationDialogRowModels.addAll(fullList); //Añadir la lista completa
         } else {
             //Si el usuario escribio algo
             String lowerCaseText = text.toLowerCase();
-            for(DialogAddAplicationRowModel rowModel : fullList){
+            for(AddAplicationDialogRowModel rowModel : fullList){
                 if(rowModel.getAppName().toLowerCase().contains(lowerCaseText)){
-                    dialogAddAplicationRowModels.add(rowModel);
+                    addAplicationDialogRowModels.add(rowModel);
                 }
             }
             //Cambiar el estado del rowmodel si se encuentra en la lista de apps seleccionadas
-            for(DialogAddAplicationRowModel rowModel : dialogAddAplicationRowModels){
+            for(AddAplicationDialogRowModel rowModel : addAplicationDialogRowModels){
                 rowModel.setAppSelected(selectedApps.contains(rowModel.getAppName()));
             }
         }
