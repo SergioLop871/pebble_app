@@ -1,12 +1,14 @@
 package com.example.pebble_app;
 
+import android.graphics.drawable.Drawable;
+
 public class AddAplicationDialogRowModel {
 
-    String appName;
-    int appIcon;
-    Boolean appSelected;
+    private String appName;
+    private Drawable appIcon;
+    private Boolean appSelected;
 
-    public AddAplicationDialogRowModel(String appName, int appIcon, Boolean appSelected){
+    public AddAplicationDialogRowModel(String appName, Drawable appIcon, Boolean appSelected){
         this.appName = appName;
         this.appIcon = appIcon;
         this.appSelected = appSelected;
@@ -16,7 +18,7 @@ public class AddAplicationDialogRowModel {
         return appName;
     }
 
-    public int getAppIcon() {
+    public Drawable getAppIcon() {
         return appIcon;
     }
 

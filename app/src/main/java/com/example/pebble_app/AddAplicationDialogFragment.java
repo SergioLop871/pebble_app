@@ -1,6 +1,10 @@
 package com.example.pebble_app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddAplicationDialogFragment extends DialogFragment {
 
@@ -48,11 +53,20 @@ public class AddAplicationDialogFragment extends DialogFragment {
     }
 
     private void setUpAplicationRowModels(){
-        for(int i = 0; i < 4; i++){
-            int defaultIcon = R.drawable.outline_question_mark_24;
-            String appName = "App " + (i + 1);
+        PackageManager packageManager = requireContext().getPackageManager();
+
+        // Crear un intent para buscar apps lanzables
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        // Obtener todas las actividades que pueden ser lanzadas
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+
+        for(ResolveInfo info : resolveInfos){
+            Drawable appIcon = info.loadIcon(packageManager);
+            String appName = info.loadLabel(packageManager).toString();
             AddAplicationDialogRowModel model =
-                    new AddAplicationDialogRowModel(appName, defaultIcon, false);
+                    new AddAplicationDialogRowModel(appName, appIcon, false);
             addAplicationDialogRowModels.add(model);
         }
     }

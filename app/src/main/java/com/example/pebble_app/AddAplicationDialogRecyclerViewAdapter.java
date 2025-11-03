@@ -95,7 +95,7 @@ public class AddAplicationDialogRecyclerViewAdapter
                 .getAppName();
 
         holder.appNameTV.setText(appName);
-        holder.appIconIV.setImageResource(addAplicationDialogRowModels.get(position)
+        holder.appIconIV.setImageDrawable(addAplicationDialogRowModels.get(position)
                 .getAppIcon());
 
         //Asignar el valor al checkbox como "Checked" si esta en la lista "selectedApps"

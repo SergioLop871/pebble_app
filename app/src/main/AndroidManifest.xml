@@ -10,6 +10,14 @@
          PACKAGE_USAGE_STATS es un permiso de nivel de sistema que no se otorga automáticamente;
          el usuario debe habilitarlo manualmente desde los ajustes del dispositivo -->
 
+    <!-- Para poder listar todas las aplicaciones que el usuario puede abrir desde el launcher -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
