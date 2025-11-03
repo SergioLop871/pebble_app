@@ -41,6 +41,7 @@
                 android:layout_marginBottom="12dp"
                 android:gravity="center|center"
                 android:text="Tiktok"
+                android:maxLength="19"
                 android:textColor="@color/white"
                 android:textSize="22dp"
                 android:textStyle="bold"

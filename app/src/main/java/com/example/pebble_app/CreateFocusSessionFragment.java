@@ -49,11 +49,11 @@ public class CreateFocusSessionFragment extends Fragment
 
     //ArrayList para pasar las aplicaciones dentro del chipGroup a AddAplicationDialogFragment
 
-    private int startHour, startMinute, endHour, endMinute;
+    private int startHour, startMinute, endHour, endMinute, startAmPm, endAmPm;
 
     private TextView timeRangeTV;
 
-    private String startAmPm, endAmPm;
+    private String startAmPmText, endAmPmText;
 
     private ArrayList<String> selectedApps = new ArrayList<>();
 
@@ -80,8 +80,8 @@ public class CreateFocusSessionFragment extends Fragment
         this.startMinute = startMinute;
         this.endHour = endHour;
         this.endMinute = endMinute;
-        this.startAmPm = (startAmPm == 0) ? "am" : "pm";
-        this.endAmPm = (endAmPm == 0) ? "am" : "pm";
+        this.startAmPmText = (startAmPm == 0) ? "am" : "pm";
+        this.endAmPmText = (endAmPm == 0) ? "am" : "pm";
 
         startMinuteFormat = String.format(format, this.startMinute);
 
@@ -90,9 +90,9 @@ public class CreateFocusSessionFragment extends Fragment
         //Añadir el formato de los minutos si estos son mayores a 0
         timeRangeString = this.startHour
                 + ((this.startMinute > 0) ? (":" + startMinuteFormat) : "")
-                + " " + this.startAmPm.toUpperCase() + " - " + this.endHour
+                + " " + this.startAmPmText.toUpperCase() + " - " + this.endHour
                 + ((this.endMinute > 0) ? (":" + endMinuteFormat) : "")
-                + " " + this.endAmPm.toUpperCase();
+                + " " + this.endAmPmText.toUpperCase();
 
         timeRangeTV.setText(timeRangeString);
 
@@ -227,4 +227,5 @@ public class CreateFocusSessionFragment extends Fragment
 
         return view;
     }
+
 }

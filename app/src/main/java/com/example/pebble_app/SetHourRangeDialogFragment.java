@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,9 +49,11 @@ public class SetHourRangeDialogFragment extends DialogFragment {
 
     private Boolean settingNP;
 
+    //Varaibles para verificar si el rango de tiempo es valido
+    int startTotalMinutes, endTotalMinutes;
 
-    int startHoursSize, endHoursSize;
 
+    //Funcion para evitar que el usuario pueda cambiar los valores de numberPicker
     private void deleteNumberPickerEditText(NumberPicker np){
         for(int i = 0; i < np.getChildCount(); i++){
             View child = np.getChildAt(i);
@@ -63,6 +66,29 @@ public class SetHourRangeDialogFragment extends DialogFragment {
                 editText.setInputType(InputType.TYPE_NULL);
             }
         }
+    }
+
+    //Metodo para saber si el rango de tiempo es valido (hora de inicio menor a la de fin)
+    private Boolean checkValidTimeRange(){
+
+        int startH = startHourNP.getValue();
+        int startM = startMinuteNP.getValue();
+        int startAmPm = startAmPmNPT.getValue();
+        int endH = endHourNP.getValue();
+        int endM = endMinuteNP.getValue();
+        int endAmPm = endAmPmNPT.getValue();
+
+        //Obtener el total de los minutos de la hora de inicio
+                                                             //Si son las 12 am son las 0 horas (formato 24h)
+        startTotalMinutes = (startAmPm == 1) ? startH + 12 : ((startH == 12) ? 0 : startH); // Obtener las horas (formato 24h)
+        startTotalMinutes = (startTotalMinutes * 60) + startM; // Obtener los minutos totales
+
+        //Obtener el totoal de los minutos de la hora de fin
+        endTotalMinutes = (endAmPm == 1) ? (endH + 12) : endH; // Obtener las horas (formato 24h)
+        endTotalMinutes = (endTotalMinutes * 60) + endM; // Obtener los minutos totales
+
+
+        return startTotalMinutes < endTotalMinutes; //Verificar si las hora de inicio es menor a la de fin
     }
 
     //Metodo para obtener al fragmento padre
@@ -103,11 +129,19 @@ public class SetHourRangeDialogFragment extends DialogFragment {
             dismiss();
         });
 
+        //Boton para confirmar el rango de tiempo
         setTimeRangeBtn.setOnClickListener(v -> {
-            listener.setTimeRange(startHourNP.getValue(), startMinuteNP.getValue(),
-                    startAmPmNPT.getValue(), endHourNP.getValue(), endMinuteNP.getValue(),
-                    endAmPmNPT.getValue());
-            dismiss();
+            if(checkValidTimeRange()){
+                listener.setTimeRange(startHourNP.getValue(), startMinuteNP.getValue(),
+                        startAmPmNPT.getValue(), endHourNP.getValue(), endMinuteNP.getValue(),
+                        endAmPmNPT.getValue());
+                dismiss();
+            } else{
+                Toast.makeText(getContext(),
+                        "Rango invalido: la hora de inicio debe ser menor a la de fin",
+                        Toast.LENGTH_LONG).show();
+            }
+
         });
 
         NumberPicker[] numberPickers = { startHourNP, startMinuteNP, startAmPmNPT,
@@ -142,6 +176,33 @@ public class SetHourRangeDialogFragment extends DialogFragment {
         endAmPmNPT.setMaxValue(1);
         endAmPmNPT.setDisplayedValues(amPmTextArray);
 
+        //Verificar si la hora de incio es mayor a la de fin para reducirla y vicevesa
+        for(NumberPicker np : numberPickers){
+            deleteNumberPickerEditText(np);
+            np.setOnValueChangedListener((numberPicker, oldValue, newValue) -> {
+                int id = numberPicker.getId();
+
+                //Verificar si el usuario modifico un number picker (endHourNP o endAmPmNPT)
+                if (id == R.id.endHourNumberPicker) {
+                    endHourI = newValue;
+                    /*Si se coloca la hora de fin en 12,
+                    * endAmPmI se cambia a PM, para evitar conflictos
+                    * con los dias seleccionados y que
+                    * la hora de fin no sea menor a la de inicio */
+                    if(endHourI == 12){ endAmPmNPT.setValue(1);}
+                } else if (id == R.id.endAmPmNumberPickerText) {
+                    endAmPmI = newValue;
+
+                    if(endAmPmI == 0 && endHourI == 12){
+                        /*Si endAmPmI es el indice "Am" y la hora fin
+                        * es "12", la hora fin se cambia a 11 para
+                        * evitar conflictos con los dias selecionados */
+                        endHourNP.setValue(11);
+                    }
+                }
+
+            });
+        }
         return view;
     }
 
