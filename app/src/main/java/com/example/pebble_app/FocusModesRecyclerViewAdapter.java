@@ -1,6 +1,7 @@
 package com.example.pebble_app;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +22,23 @@ public class FocusModesRecyclerViewAdapter
     private Context context;
     private ArrayList<FocusModesRowModel> focusModesRowModels;
 
+    //Interfaz para avisar a FocusFragment, y este se comunique con FocusFragmentContainer y cambien en fragmento
+    public interface OnCardViewClickListener{
+        void onCardViewClicked(String mode);
+    }
+
+    private OnCardViewClickListener listener;
+
     /*Constructor para obtener el contexto y el ArrayList con los elementos creados en
       *FocusFragment (cambiar por el nuevo fragmento)
     */
     public FocusModesRecyclerViewAdapter(Context context,
-                                            ArrayList<FocusModesRowModel> focusModesRowModels)
+                                            ArrayList<FocusModesRowModel> focusModesRowModels,
+                                         OnCardViewClickListener listener)
     {
         this.context = context;
         this.focusModesRowModels = focusModesRowModels;
+        this.listener = listener;
     }
 
     //Metodos creados para el funcionamiento del Adaptador del RecyclerView
@@ -68,6 +78,17 @@ public class FocusModesRecyclerViewAdapter
             params.bottomMargin = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 30, cardView.getResources().getDisplayMetrics());
         }
+
+        //Abrir el fragmento para visualizar el modo creado (ver detalles)
+        cardView.setOnClickListener(v -> {
+            listener.onCardViewClicked(focusModesRowModels.get(position).getFocusModeType());
+            try{
+                Log.d("FocusModesRecyclerViewAdapter", "cardViewClicked: " + focusModesRowModels.get(position).getFocusModeType());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        });
 
         //Asignar los valores de cada elemento creado
         holder.focusModeName.setText(focusModesRowModels.get(position).getFocusModeName());

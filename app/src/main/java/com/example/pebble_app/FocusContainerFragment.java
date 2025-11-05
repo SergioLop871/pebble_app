@@ -67,5 +67,29 @@ public class FocusContainerFragment extends Fragment {
         }
     }
 
+    public void openSessionFragment(){
+        FragmentManager fm = getChildFragmentManager();
+        View container = getView().findViewById(R.id.fragmentContainerView);
+        if (container != null) {  // Verifica que el contenedor exista
+            FragmentTransaction ft = fm.beginTransaction();
+
+            ft.setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+            );
+
+            ft.replace(R.id.fragmentContainerView, new FragmentFocusSessionVisualizer())
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            Log.e("FocusContainer", "No se encontró el contenedor del fragmento");
+        }
+    }
+
+    public void openTimerFragment(){
+        //Aun no implementado
+    }
 
 }

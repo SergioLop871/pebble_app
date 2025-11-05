@@ -1,7 +1,9 @@
 package com.example.pebble_app;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,7 +16,8 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 
 public class FocusFragment extends Fragment
-        implements ChooseModeDialogFragment.OnModeSelectedListener {
+        implements ChooseModeDialogFragment.OnModeSelectedListener,
+        FocusModesRecyclerViewAdapter.OnCardViewClickListener{
 
     /*
     * Aqui van las variables para almacenar la info que se muestra
@@ -71,6 +74,20 @@ public class FocusFragment extends Fragment
         return fragment;
     }
 
+    //Para poder cambiar de visualizar el modo seleccionado del ReyclerView
+    @Override
+    public void onCardViewClicked(String mode){
+        Fragment parent = getParentFragment();
+        if(mode.equals("session")){
+            if(parent instanceof FocusContainerFragment){
+                ((FocusContainerFragment) parent).openSessionFragment();
+            }
+        } else if (mode.equals("timer")) { //Aun no implementado
+            if(parent instanceof FocusContainerFragment){
+                ((FocusContainerFragment) parent).openTimerFragment();
+            }
+        }
+    }
 
     /*Se sobrescribe el metodo de la interfaz para que ChooseModeDialogFragment
     * se pueda comunicar con FocusFragment, y FocusFragment con
@@ -141,7 +158,7 @@ public class FocusFragment extends Fragment
 
         //Crear el modelo para implementarlo en el recyclerview
         FocusModesRowModel newMode = new FocusModesRowModel(focusModeName, focusModeTime,
-                focusModeDays, focusModeIcon);
+                focusModeDays, focusModeIcon, focusModeType);
 
         focusModesRowModels.add(newMode);
     }
@@ -207,7 +224,7 @@ public class FocusFragment extends Fragment
         }
 
         //Crear el adapter para el recyclerView
-        adapter = new FocusModesRecyclerViewAdapter(requireContext(), focusModesRowModels);
+        adapter = new FocusModesRecyclerViewAdapter(requireContext(), focusModesRowModels, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 

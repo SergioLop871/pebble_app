@@ -56,22 +56,20 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
             android:text="😴"
+            android:gravity="center"
             android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="60dp"
+            android:autoSizeMinTextSize="55dp"
+            android:autoSizeMaxTextSize="70dp"
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine2"
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLine4"
             app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine6"
-            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine3"
-            app:layout_constraintVertical_bias="0.0"
-            tools:layout_editor_absoluteX="53dp" />
+            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine3" />
 
         <!--Sección del horario -->
         <TextView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/bgGray"
             android:text="Good Sleep"
             android:textColor="@color/white"
             android:autoSizeTextType="uniform"
@@ -81,9 +79,7 @@
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine6"
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLine9"
             app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine5"
-            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine4"
-            app:layout_constraintVertical_bias="0.0"
-            tools:layout_editor_absoluteX="253dp" />
+            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine4"/>
 
         <TextView
             android:layout_width="0dp"
@@ -97,9 +93,6 @@ modo rutina si lo deseas."
             android:textColor="@color/white"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="15dp"
-            android:background="@color/bgGray"
-            tools:layout_editor_absoluteX="78dp"
-            tools:layout_editor_absoluteY="208dp"
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine2"
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLine9"
             app:layout_constraintTop_toTopOf="@id/horizontalGuideLine7"
@@ -113,10 +106,7 @@ modo rutina si lo deseas."
             app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine10"
             app:layout_constraintEnd_toStartOf="@+id/verticalGuideLineEnd"
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
-            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine9"
-            tools:layout_editor_absoluteX="186dp"
-
-            tools:layout_editor_absoluteY="263dp">
+            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine9">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -352,12 +342,10 @@ modo rutina si lo deseas."
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine3"
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLine5"
             app:layout_constraintTop_toTopOf="@id/horizontalGuideLine11"
-            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLineEnd"
-            tools:layout_editor_absoluteX="83dp"
-            tools:layout_editor_absoluteY="616dp" />
+            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine12" />
 
         <Button
-            android:id="@+id/createModeButton"
+            android:id="@+id/editModeButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:backgroundTint="@color/pibbleLogoWater"
@@ -366,9 +354,7 @@ modo rutina si lo deseas."
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine6"
             app:layout_constraintEnd_toStartOf="@id/verticalGuideLine8"
             app:layout_constraintTop_toTopOf="@id/horizontalGuideLine11"
-            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLineEnd"
-            tools:layout_editor_absoluteX="221dp"
-            tools:layout_editor_absoluteY="616dp" />
+            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine12" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/verticalGuideLine1"
@@ -517,6 +503,13 @@ modo rutina si lo deseas."
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontalGuideLine11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.78" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
