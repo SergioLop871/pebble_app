@@ -3,6 +3,8 @@ package com.example.pebble_app;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,6 @@ public class FragmentFocusSessionVisualizer extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,6 +39,19 @@ public class FragmentFocusSessionVisualizer extends Fragment {
             getParentFragmentManager().popBackStack(); //Eliminar el fragmento actual para volver
         });
 
+        editBtn.setOnClickListener(v -> {
+            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+            ft.setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+            );
+            ft.replace(R.id.fragmentContainerView, new FragmentFocusSessionEdit())
+                    .addToBackStack(null)
+                    .commit();
+
+        });
 
         return view;
     }

@@ -20,30 +20,31 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 
-public class CreateFocusSessionFragment extends Fragment
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link FragmentFocusSessionEdit#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class FragmentFocusSessionEdit extends Fragment
         implements AddAplicationDialogRecyclerViewAdapter.OnCheckBoxSellected,
-        SetHourRangeDialogFragment.onSetTimeRange{
+        SetHourRangeDialogFragment.onSetTimeRange {
 
-    //Botón para volver a FocusFragment
-    private ImageButton backBtn;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    //Nombre y descripcion de la session de enfoque
+    // TODO: Rename and change types of parameters
+
+    private LayoutInflater inflater; //LayoutInflater para colocar una chip en el chipgroup de apps
+    private ChipGroup chipGroup; //Para obtener el chipGroup del layout
+    private ImageButton goBackBtn; //Boton para volver atras
+
+    private Button addAplicationBtn, saveEditBtn; //Boton para guardar cambios
+
     private EditText sessionNameET, sessionDescriptionET, sessionEmoticonET;
 
-    //Rango de horas y minutos de la sesión
-    private int sessionStartHour, sessionStartMinute, sessionEndHour, getSessionEndMinute;
-
-    //LayoutInflater para colocar una chip en el chipgroup de apps
-    private LayoutInflater inflater;
-
-    //Para obtener el chipGroup del layout
-    private ChipGroup chipGroup;
-
-    //Botones del layout
-    private Button addAplicationBtn, createSessionBtn;
-
-    //Boton para seleccionar rango de horas
-    private CardView setHoursRangeBtn;
+    private CardView setHoursRangeBtn; //Boton para seleccionar horas
 
     //Botones de los dias de la semana
     private CardView sunBtn, monBtn, tueBtn, wedBtn, thuBtn, friBtn, satBtn;
@@ -64,38 +65,23 @@ public class CreateFocusSessionFragment extends Fragment
     //Almacenar el dialogo para actualizar las aplicaciones seleccionadas en tiempo real
     private AddAplicationDialogFragment dialogAddAplication;
 
+    //Actualizar el rango de tiempo
     private SetHourRangeDialogFragment dialogSetHourRange;
+    private String mParam1;
+    private String mParam2;
 
-    public CreateFocusSessionFragment() {
+    public FragmentFocusSessionEdit() {
         // Required empty public constructor
     }
 
-    public void createSession(){
-        //Logica para crear el modo de enfoque (Subir a la base)
-        sessionNameET.getText();
-        sessionDescriptionET.getText();
-
-        sessionEmoticonET.getText();
-
-        /*
-        startHour;
-        startMinute;
-        startAmPm;
-
-        endHour;
-        endMinute;
-        endAmPm;
-        */
-
-
-        //selectedDays;
-        //selectedApps
-        Toast.makeText(getContext(), "Boton crear presionado", Toast.LENGTH_SHORT).show();
+    public void saveEditSession(){
+        //Logica para editar el modo de enfoque (Cambiar en la base)
+        Toast.makeText(getContext(), "Boton guardar presionado", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void setTimeRange(int startHour, int startMinute, int startAmPm,
-                      int endHour, int endMinute, int endAmPm){
+                             int endHour, int endMinute, int endAmPm){
 
         String format = "%02d";
         String startMinuteFormat, endMinuteFormat;
@@ -132,7 +118,6 @@ public class CreateFocusSessionFragment extends Fragment
 
     }
 
-    //Metodo para crear un chip en el chipGroup
     @Override
     public void onChecked(String applicationName){
         //Crear una chip
@@ -170,28 +155,44 @@ public class CreateFocusSessionFragment extends Fragment
         }
     }
 
+    public static FragmentFocusSessionEdit newInstance(String param1, String param2) {
+        FragmentFocusSessionEdit fragment = new FragmentFocusSessionEdit();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_create_focus_session, container, false);
+        View view = inflater.inflate(R.layout.fragment_focus_session_edit, container, false);
 
-        backBtn = view.findViewById(R.id.goBackButton); //Obtener el boton de volver
-        addAplicationBtn = view.findViewById(R.id.addAppsButton); //Boton para agregar aplicaciones
-        createSessionBtn = view.findViewById(R.id.createModeButton); //Boton para crear la session
+        goBackBtn = view.findViewById(R.id.goBackButton); //Obtener el botón de volver
+        addAplicationBtn = view.findViewById(R.id.addAppsButton); //Botón para agregar aplicaciones
+        saveEditBtn = view.findViewById(R.id.saveEditModeButton); //Botón para guardar los cambios
 
-
-        sessionNameET = view.findViewById(R.id.focusSessionNameEditText);
-        sessionDescriptionET = view.findViewById(R.id.focusSessionDescriptionEditText);
-        sessionEmoticonET = view.findViewById(R.id.focusSessionEmoticonEditText);
+        sessionNameET = view.findViewById(R.id.focusSessionNameEditText); //Nombre de la session
+        sessionDescriptionET = view.findViewById(R.id.focusSessionDescriptionEditText); // Descripción
+        sessionEmoticonET = view.findViewById(R.id.focusSessionEmoticonEditText); //Emoticono
 
         //Obtener el botón de asignar rango de horas y minutos
         setHoursRangeBtn = view.findViewById(R.id.setHoursRangeButton);
         //TV para mostrar el rango de tiempo seleccionado
         timeRangeTV = view.findViewById(R.id.timeRangeTextView);
 
-
-        backBtn.setOnClickListener(v -> {
+        //Boton de volver
+        goBackBtn.setOnClickListener(v -> {
             getParentFragmentManager().popBackStack(); //Regresar al fragmento anterior
         });
 
@@ -225,15 +226,13 @@ public class CreateFocusSessionFragment extends Fragment
                 } else{
                     selectedDays.remove(selectedDay); //Eliminar si no esta seleccionado
                 }
-                Log.d("SelectedDays", selectedDays.toString()); //Mostar los dias en consola
+                Log.d("SelectedDays edit", selectedDays.toString()); //Mostar los dias en consola
             });
         }
 
-
-
-        //Boton para crear el dialogFragment de añadir apps
+        //Listener para crear el dialogFragment de añadir apps
         addAplicationBtn.setOnClickListener(v -> {
-            dialogAddAplication = new AddAplicationDialogFragment();  //Crear el fragmento
+            dialogAddAplication = new AddAplicationDialogFragment(); //Crear el fragmento
             selectedApps.clear(); //Borrar la lista
             //Añadir el nombre de las aplicaciones en el chipgroup a selectedApps
             for(int i = 0; i < chipGroup.getChildCount(); i++){
@@ -252,11 +251,11 @@ public class CreateFocusSessionFragment extends Fragment
         chipGroup = view.findViewById(R.id.appChipGroup);
 
         //Listener para el boton de crear sesion de enfoque
-        createSessionBtn.setOnClickListener(v -> {
-            createSession();
+        saveEditBtn.setOnClickListener(v -> {
+            saveEditSession();
         });
+
 
         return view;
     }
-
 }
