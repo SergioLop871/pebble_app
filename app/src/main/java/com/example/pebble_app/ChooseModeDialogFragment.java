@@ -69,16 +69,20 @@ public class ChooseModeDialogFragment extends DialogFragment {
             dismiss();
         });
 
+        //Listener para crear una sesión de enfoque
         sessionBtn.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onModeSelected("session");
+                listener.onModeSelected("session"); //Llamar a FocusContainerFragment
             }
-            dismiss();
+            dismiss(); //Cerrar el dialogFragment
         });
 
+        //Listener para crear un temporizador
         timerBtn.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Modo Temporizador seleccionado", Toast.LENGTH_SHORT).show();
-            dismiss();
+            if (listener != null) {
+                listener.onModeSelected("timer"); //Llamar a FocusContainerFragment
+            }
+            dismiss(); //Cerrar el dialogFragment
         });
 
         return view;

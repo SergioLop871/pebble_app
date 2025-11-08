@@ -45,7 +45,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:gravity="start|center"
-                android:text="Crear Sesión de Enfoque"
+                android:text="Crear Temporizador"
                 android:textColor="@color/white"
                 android:autoSizeTextType="uniform"
                 android:autoSizeMaxTextSize="20sp"
@@ -58,8 +58,8 @@
             android:id="@+id/textView2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="El modo enfoque te permite crear un bloqueo de aplicaciones
-de manera rutinaria."
+            android:text="El modo temporizador te permite crear
+un bloqueo por tiempo en horas y minutos."
             android:gravity="center"
             android:textColor="@color/white"
             android:autoSizeTextType="uniform"
@@ -86,7 +86,7 @@ de manera rutinaria."
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/focusSessionNameEditText"
+                    android:id="@+id/timerNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="20"
@@ -96,7 +96,7 @@ de manera rutinaria."
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="15sp"
                     android:autoSizeMaxTextSize="20sp"
-                    android:hint="Nombre de enfoque"
+                    android:hint="Nombre del temporizador"
                     android:textColor="@color/white"
                     android:inputType="text"
                     android:paddingLeft="10dp"
@@ -106,7 +106,7 @@ de manera rutinaria."
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="@color/pibbleLogoWater"/>
+                    android:background="@color/pibbleLogoSand"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -128,7 +128,7 @@ de manera rutinaria."
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/focusSessionDescriptionEditText"
+                    android:id="@+id/timerDescriptionEditText"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="20"
@@ -152,14 +152,14 @@ de manera rutinaria."
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:background="@color/pibbleLogoWater"/>
+                    android:background="@color/pibbleLogoSand"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
 
 
-    <!--Sección para el icono de la sesión de enfoque (emoticon) -->
+        <!--Sección para el icono de la sesión de enfoque (emoticon) -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -228,7 +228,7 @@ de manera rutinaria."
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="Horas"
+                    android:text="Tiempo"
                     android:autoSizeTextType="uniform"
                     android:autoSizeMinTextSize="12sp"
                     android:autoSizeMaxTextSize="20sp"
@@ -237,7 +237,7 @@ de manera rutinaria."
                     />
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/setHoursRangeButton"
+                    android:id="@+id/setTimerHourButton"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
@@ -245,10 +245,10 @@ de manera rutinaria."
                     app:cardBackgroundColor="@color/focusCustomInputBg">
 
                     <TextView
-                        android:id="@+id/timeRangeTextView"
+                        android:id="@+id/timerHoursTextView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="8 AM - 9 AM"
+                        android:text="01 : 00"
                         android:autoSizeTextType="uniform"
                         android:autoSizeMinTextSize="15sp"
                         android:autoSizeMaxTextSize="20sp"
@@ -263,197 +263,7 @@ de manera rutinaria."
         </androidx.cardview.widget.CardView>
 
 
-        <!--Sección para el ajuste de dias -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardElevation="0dp"
-            app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
-            app:layout_constraintEnd_toStartOf="@id/verticalGuideLineEnd"
-            app:layout_constraintTop_toTopOf="@id/horizontalGuideLine11"
-            app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine12">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:text="Días de la semana"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="12sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:textColor="@color/white"
-                    android:gravity="center"/>
-
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="2"
-                    app:cardCornerRadius="30dp"
-                    app:cardBackgroundColor="@color/focusCustomInputBg">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysSundayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="D"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysMondayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="L"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysTuesdayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="M"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysWednesdayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="X"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysThursdayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="J"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysFridayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="V"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/daysSaturdayButton"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/day_button_selector"
-                            app:cardCornerRadius="30dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:text="S"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                android:autoSizeTextType="uniform"/>
-
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
         <!--Boton para agregar aplicaciones (abrir DialogFragment) -->
         <Button
@@ -504,10 +314,10 @@ de manera rutinaria."
         </androidx.cardview.widget.CardView>
 
         <Button
-            android:id="@+id/createModeButton"
+            android:id="@+id/createTimerModeButton"
             android:layout_width="200dp"
             android:layout_height="40dp"
-            android:backgroundTint="@color/pibbleLogoWater"
+            android:backgroundTint="@color/pibbleLogoSand"
             android:padding="0dp"
             android:text="Crear"
             app:layout_constraintStart_toStartOf="@id/verticalGuideLine2"
@@ -624,14 +434,14 @@ de manera rutinaria."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.359" />
+            app:layout_constraintGuide_percent="0.39" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontalGuideLine10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.44" />
+            app:layout_constraintGuide_percent="0.481" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontalGuideLine11"
@@ -652,21 +462,21 @@ de manera rutinaria."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.555"/>
+            app:layout_constraintGuide_percent="0.51"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontalGuideLine14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.61"/>
+            app:layout_constraintGuide_percent="0.565"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontalGuideLine15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.62"/>
+            app:layout_constraintGuide_percent="0.58"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/horizontalGuideLine16"

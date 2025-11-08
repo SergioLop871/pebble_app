@@ -20,21 +20,10 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentFocusSessionEdit#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class FragmentFocusSessionEdit extends Fragment
         implements AddAplicationDialogRecyclerViewAdapter.OnCheckBoxSellected,
         SetHourRangeDialogFragment.onSetTimeRange {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
 
     private LayoutInflater inflater; //LayoutInflater para colocar una chip en el chipgroup de apps
     private ChipGroup chipGroup; //Para obtener el chipGroup del layout
@@ -42,6 +31,7 @@ public class FragmentFocusSessionEdit extends Fragment
 
     private Button addAplicationBtn, saveEditBtn; //Boton para guardar cambios
 
+    private String sessionName, sessionDescription, sessionEmoticon; //Para guardar los datos en cadenas
     private EditText sessionNameET, sessionDescriptionET, sessionEmoticonET;
 
     private CardView setHoursRangeBtn; //Boton para seleccionar horas
@@ -57,18 +47,16 @@ public class FragmentFocusSessionEdit extends Fragment
     private String startAmPmText, endAmPmText; //Para mostar el formato AM/PM
 
     //ArrayList para pasar las aplicaciones dentro del chipGroup a AddAplicationDialogFragment
-    private ArrayList<String> selectedApps = new ArrayList<>();
+    private ArrayList<String> selectedApps;
 
     //ArrayLisr para almacenar los dias seleccionados
-    private ArrayList<String> selectedDays = new ArrayList<>();
+    private ArrayList<String> selectedDays;
 
     //Almacenar el dialogo para actualizar las aplicaciones seleccionadas en tiempo real
     private AddAplicationDialogFragment dialogAddAplication;
 
     //Actualizar el rango de tiempo
     private SetHourRangeDialogFragment dialogSetHourRange;
-    private String mParam1;
-    private String mParam2;
 
     public FragmentFocusSessionEdit() {
         // Required empty public constructor
@@ -77,6 +65,106 @@ public class FragmentFocusSessionEdit extends Fragment
     public void saveEditSession(){
         //Logica para editar el modo de enfoque (Cambiar en la base)
         Toast.makeText(getContext(), "Boton guardar presionado", Toast.LENGTH_SHORT).show();
+        //Logica para crear la sesión
+        boolean readyToCreate = true;
+
+        //Revisar si no estan vacios algunos campos
+        if(sessionNameET.getText().toString().isEmpty()){
+            Toast.makeText(getContext(),
+                    "Pon un nombre a la session de enfoque", Toast.LENGTH_SHORT).show();
+            readyToCreate = false;
+        }
+        if(selectedApps.isEmpty()){
+            Toast.makeText(getContext(),
+                    "Selecciona al menos una aplicación", Toast.LENGTH_SHORT).show();
+            readyToCreate = false;
+        }
+
+        //Crear la sesion si esta lista
+        if(readyToCreate){
+            Toast.makeText(getContext(),
+                    "Se ha creado la sesión", Toast.LENGTH_SHORT).show();
+            Log.d("createTimerMode", "Name: " + sessionNameET.getText().toString());
+            Log.d("createTimerMode", "Description: " + sessionDescriptionET.getText().toString());
+            Log.d("createTimerMode", "Emoticon: " + sessionEmoticonET.getText().toString());
+            Log.d("createTimerMode", "Time range:  " + timeRangeTV.getText().toString());
+            Log.d("createTimerMode", "Selected days:  " + selectedDays.toString());
+            Log.d("createTimerMode", "Selected Apps:  " + selectedApps.toString());
+            getParentFragmentManager().popBackStack(); //Regresar al fragmento anterior
+        }
+    }
+
+    //Metodo para inicializar los elementos (EditText, TextView, ChipGroup, etc.) en la vista
+    public void initSessionInfo(String sessionName, String sessionDescription,
+                                String sessionEmoticon, int startHour, int startMinute,
+                                int startAmPm, int endHour, int endMinute, int endAmPm,
+                                ArrayList<String> selectedDays, ArrayList<String> selectedApps){
+
+        this.sessionName = sessionName;
+        this.sessionDescription = sessionDescription;
+        this.sessionEmoticon = sessionEmoticon;
+        this.startHour = startHour;
+        this.startMinute = startMinute;
+        this.startAmPm = startAmPm;
+        this.endHour = endHour;
+        this.endMinute = endMinute;
+        this.endAmPm = endAmPm;
+
+        this.selectedDays = new ArrayList<>(selectedDays);
+        this.selectedApps = new ArrayList<>(selectedApps);
+
+    }
+
+    public void setElementsInfo(CardView[] dayButtons){
+        sessionDescriptionET.setText(sessionName);
+        sessionDescriptionET.setText(sessionDescription);
+        sessionEmoticonET.setText(sessionEmoticon);
+
+        //Varaibles para iniciar el formato de timeRangeTV
+        String format = "%02d";
+        String startMinuteFormat, startAmPmText, endMinuteFormat, endAmPmText;
+        String timeRangeString;
+        startAmPmText = (startAmPm == 0) ? "am" : "pm";
+        endAmPmText = (endAmPm == 0) ? "am" : "pm";
+        startMinuteFormat = String.format(format, this.startMinute);
+        endMinuteFormat = String.format(format, this.endMinute);
+
+        //Añadir el formato de los minutos si estos son mayores a 0
+        timeRangeString = this.startHour
+                + ((this.startMinute > 0) ? (":" + startMinuteFormat) : "")
+                + " " + startAmPmText.toUpperCase() + " - " + this.endHour
+                + ((this.endMinute > 0) ? (":" + endMinuteFormat) : "")
+                + " " + endAmPmText.toUpperCase();
+
+        timeRangeTV.setText(timeRangeString);
+
+        //Seleccionar los dias de la semana obtenidos
+        for(CardView dayButton : dayButtons){
+            if(dayButton.getChildAt(0) instanceof TextView){
+                TextView childTV = (TextView) dayButton.getChildAt(0);
+                if(selectedDays.contains(childTV.getText().toString())){
+                    dayButton.setSelected(true);
+                }
+            }
+        }
+
+        //Asginar los nombres de las aplicaciones obtenidas
+        for(String appName : selectedApps){
+            //Crear una chip
+            inflater = LayoutInflater.from(requireContext());
+            if(inflater != null || chipGroup == null || !isAdded()){
+                Chip chip = (Chip) inflater.inflate(R.layout.create_session_item_chip, chipGroup,false);
+                chip.setText(appName); //Asginar el nombre de la app
+                chip.setTag(appName);
+                chip.setOnCloseIconClickListener(v -> {
+                    chipGroup.removeView(chip);
+                    selectedApps.remove(appName);
+                });
+                chipGroup.addView(chip);
+            }
+        }
+
+
     }
 
     @Override
@@ -145,31 +233,12 @@ public class FragmentFocusSessionEdit extends Fragment
                 if(applicationName.equals(chip.getTag())){
                     Log.d("onUnchecked", "Chip a eliminar: " + chip.getTag());
                     chipGroup.removeView(chip);
-
                     //Borrar la app de la lista y actualizar en el dialogo
                     selectedApps.remove(applicationName);
                     dialogAddAplication.setSelectedApps(selectedApps);
                     break;
                 }
             }
-        }
-    }
-
-    public static FragmentFocusSessionEdit newInstance(String param1, String param2) {
-        FragmentFocusSessionEdit fragment = new FragmentFocusSessionEdit();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -185,6 +254,8 @@ public class FragmentFocusSessionEdit extends Fragment
         sessionNameET = view.findViewById(R.id.focusSessionNameEditText); //Nombre de la session
         sessionDescriptionET = view.findViewById(R.id.focusSessionDescriptionEditText); // Descripción
         sessionEmoticonET = view.findViewById(R.id.focusSessionEmoticonEditText); //Emoticono
+
+        chipGroup = view.findViewById(R.id.appChipGroup); //Obtener el chipgroup
 
         //Obtener el botón de asignar rango de horas y minutos
         setHoursRangeBtn = view.findViewById(R.id.setHoursRangeButton);
@@ -212,6 +283,8 @@ public class FragmentFocusSessionEdit extends Fragment
 
         //Crear un arreglo de botones
         CardView[] dayButtons = {sunBtn, monBtn, tueBtn, wedBtn, thuBtn, friBtn, satBtn};
+
+        setElementsInfo(dayButtons);
 
         //Asignar un onClickListener a los botnes de los dias
         for(CardView card : dayButtons){
@@ -248,7 +321,7 @@ public class FragmentFocusSessionEdit extends Fragment
             dialogAddAplication.show(getChildFragmentManager(), "addAplicationDialog");
         });
 
-        chipGroup = view.findViewById(R.id.appChipGroup);
+
 
         //Listener para el boton de crear sesion de enfoque
         saveEditBtn.setOnClickListener(v -> {

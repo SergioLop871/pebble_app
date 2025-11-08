@@ -70,29 +70,38 @@ public class CreateFocusSessionFragment extends Fragment
         // Required empty public constructor
     }
 
+    //Función para crear la sesion (implemetar la logica necesaria)
     public void createSession(){
-        //Logica para crear el modo de enfoque (Subir a la base)
-        sessionNameET.getText();
-        sessionDescriptionET.getText();
+        //Logica para crear la sesión
+        boolean readyToCreate = true;
 
-        sessionEmoticonET.getText();
+        //Revisar si no estan vacios algunos campos
+        if(sessionNameET.getText().toString().isEmpty()){
+            Toast.makeText(getContext(),
+                    "Pon un nombre a la session de enfoque", Toast.LENGTH_SHORT).show();
+            readyToCreate = false;
+        }
+        if(selectedApps.isEmpty()){
+            Toast.makeText(getContext(),
+                    "Selecciona al menos una aplicación", Toast.LENGTH_SHORT).show();
+            readyToCreate = false;
+        }
 
-        /*
-        startHour;
-        startMinute;
-        startAmPm;
-
-        endHour;
-        endMinute;
-        endAmPm;
-        */
-
-
-        //selectedDays;
-        //selectedApps
-        Toast.makeText(getContext(), "Boton crear presionado", Toast.LENGTH_SHORT).show();
+        //Crear la sesion si esta lista
+        if(readyToCreate){
+            Toast.makeText(getContext(),
+                    "Se ha creado la sesión", Toast.LENGTH_SHORT).show();
+            Log.d("createTimerMode", "Name: " + sessionNameET.getText().toString());
+            Log.d("createTimerMode", "Description: " + sessionDescriptionET.getText().toString());
+            Log.d("createTimerMode", "Emoticon: " + sessionEmoticonET.getText().toString());
+            Log.d("createTimerMode", "Time range:  " + timeRangeTV.getText().toString());
+            Log.d("createTimerMode", "Selected days:  " + selectedDays.toString());
+            Log.d("createTimerMode", "Selected Apps:  " + selectedApps.toString());
+            getParentFragmentManager().popBackStack(); //Regresar al fragmento anterior
+        }
     }
 
+    //Metodo de la interfaz usada para obtener el tiempo desde el dialogFragment para el rango de tiempo
     @Override
     public void setTimeRange(int startHour, int startMinute, int startAmPm,
                       int endHour, int endMinute, int endAmPm){

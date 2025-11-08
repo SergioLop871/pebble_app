@@ -54,6 +54,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/emoticonTextView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="😴"
@@ -68,6 +69,7 @@
 
         <!--Sección del horario -->
         <TextView
+            android:id="@+id/nameTextView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="Good Sleep"
@@ -82,6 +84,7 @@
             app:layout_constraintTop_toTopOf="@id/horizontalGuideLine4"/>
 
         <TextView
+            android:id="@+id/descriptionTextView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:gravity="center"

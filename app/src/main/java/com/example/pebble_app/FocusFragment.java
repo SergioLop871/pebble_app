@@ -82,7 +82,7 @@ public class FocusFragment extends Fragment
             if(parent instanceof FocusContainerFragment){
                 ((FocusContainerFragment) parent).openSessionFragment();
             }
-        } else if (mode.equals("timer")) { //Aun no implementado
+        } else if (mode.equals("timer")) {
             if(parent instanceof FocusContainerFragment){
                 ((FocusContainerFragment) parent).openTimerFragment();
             }
@@ -104,7 +104,7 @@ public class FocusFragment extends Fragment
         } else if (mode.equals("timer")) {
             Fragment parent = getParentFragment();
             if (parent instanceof FocusContainerFragment) {
-                //((FocusContainerFragment) parent).openCreateTimerFragment();
+                ((FocusContainerFragment) parent).openCreateTimerFragment();
             }
         }
     }
