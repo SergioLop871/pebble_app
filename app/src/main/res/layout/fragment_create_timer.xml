@@ -197,6 +197,7 @@ un bloqueo por tiempo en horas y minutos."
                     android:inputType="text"
                     android:text="⚡"
                     android:textColor="@color/white"
+                    android:maxLength="2"
                     android:textSize="30sp"
                     android:gravity="center"
                     android:background="@android:color/transparent"/>
