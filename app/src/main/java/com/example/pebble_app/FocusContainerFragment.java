@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 
 
 public class FocusContainerFragment extends Fragment {
@@ -20,6 +21,9 @@ public class FocusContainerFragment extends Fragment {
     public FocusContainerFragment() {
         // Required empty public constructor
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,7 +119,24 @@ public class FocusContainerFragment extends Fragment {
     }
 
     public void openTimerFragment(){
-        //Aun no implementado
+        FragmentManager fm = getChildFragmentManager();
+        View container = getView().findViewById(R.id.fragmentContainerView);
+        if (container != null) {  // Verifica que el contenedor exista
+            FragmentTransaction ft = fm.beginTransaction();
+
+            ft.setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+            );
+
+            ft.replace(R.id.fragmentContainerView, new FragmentTimerVisualizer())
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            Log.e("FocusContainer", "No se encontró el contenedor del fragmento");
+        }
     }
 
 }

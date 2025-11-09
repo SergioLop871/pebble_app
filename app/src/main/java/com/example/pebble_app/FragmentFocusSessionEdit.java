@@ -1,7 +1,9 @@
 package com.example.pebble_app;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 public class FragmentFocusSessionEdit extends Fragment
         implements AddAplicationDialogRecyclerViewAdapter.OnCheckBoxSellected,
         SetHourRangeDialogFragment.onSetTimeRange {
+
 
     private LayoutInflater inflater; //LayoutInflater para colocar una chip en el chipgroup de apps
     private ChipGroup chipGroup; //Para obtener el chipGroup del layout
@@ -82,19 +85,42 @@ public class FragmentFocusSessionEdit extends Fragment
 
         //Crear la sesion si esta lista
         if(readyToCreate){
+            sessionName = sessionNameET.getText().toString();
+            sessionDescription = sessionDescriptionET.getText().toString();
+            sessionEmoticon = sessionEmoticonET.getText().toString();
+
             Toast.makeText(getContext(),
                     "Se ha creado la sesión", Toast.LENGTH_SHORT).show();
-            Log.d("createTimerMode", "Name: " + sessionNameET.getText().toString());
-            Log.d("createTimerMode", "Description: " + sessionDescriptionET.getText().toString());
-            Log.d("createTimerMode", "Emoticon: " + sessionEmoticonET.getText().toString());
+            Log.d("createTimerMode", "Name: " + sessionName);
+            Log.d("createTimerMode", "Description: " + sessionDescription);
+            Log.d("createTimerMode", "Emoticon: " + sessionEmoticon);
             Log.d("createTimerMode", "Time range:  " + timeRangeTV.getText().toString());
             Log.d("createTimerMode", "Selected days:  " + selectedDays.toString());
             Log.d("createTimerMode", "Selected Apps:  " + selectedApps.toString());
-            getParentFragmentManager().popBackStack(); //Regresar al fragmento anterior
+
+
+            Bundle savedChanges = new Bundle();
+            savedChanges.putString("newEmoticon", sessionEmoticon);
+            savedChanges.putString("newName", sessionName);
+            savedChanges.putString("newDescription", sessionDescription);
+            savedChanges.putInt("newStartHour", startHour);
+            savedChanges.putInt("newStartMinute", startMinute);
+            savedChanges.putInt("newStartAmPm", startAmPm);
+            savedChanges.putInt("newEndHour", endHour);
+            savedChanges.putInt("newEndMinute", endMinute);
+            savedChanges.putInt("newEndAmPm", endAmPm);
+            savedChanges.putStringArrayList("newSelectedDays", selectedDays);
+            savedChanges.putStringArrayList("newSelectedApps", selectedApps);
+
+            getParentFragmentManager().setFragmentResult("editSessionResult", savedChanges);
+            getParentFragmentManager().popBackStack();
+
+
+
         }
     }
 
-    //Metodo para inicializar los elementos (EditText, TextView, ChipGroup, etc.) en la vista
+    //Metodo para inicializar los datos de la sesión de enfoque a editar
     public void initSessionInfo(String sessionName, String sessionDescription,
                                 String sessionEmoticon, int startHour, int startMinute,
                                 int startAmPm, int endHour, int endMinute, int endAmPm,
@@ -115,8 +141,9 @@ public class FragmentFocusSessionEdit extends Fragment
 
     }
 
+    //Metodo para inicializar los elementos (EditText, TextView, ChipGroup, etc.) en la vista
     public void setElementsInfo(CardView[] dayButtons){
-        sessionDescriptionET.setText(sessionName);
+        sessionNameET.setText(sessionName);
         sessionDescriptionET.setText(sessionDescription);
         sessionEmoticonET.setText(sessionEmoticon);
 
@@ -163,7 +190,6 @@ public class FragmentFocusSessionEdit extends Fragment
                 chipGroup.addView(chip);
             }
         }
-
 
     }
 
