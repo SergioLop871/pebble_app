@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Declarar el permiso para indicar la intención de usar la API "App usage statistics" -->
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions"/>
-    <!-- tools:ignore se usa para suprimir la advertencia del Lint sobre permisos protegidos.
+        tools:ignore="ProtectedPermissions" />
+    <!--
+ tools:ignore se usa para suprimir la advertencia del Lint sobre permisos protegidos.
          PACKAGE_USAGE_STATS es un permiso de nivel de sistema que no se otorga automáticamente;
-         el usuario debe habilitarlo manualmente desde los ajustes del dispositivo -->
-
+         el usuario debe habilitarlo manualmente desde los ajustes del dispositivo
+    -->
     <!-- Para poder listar todas las aplicaciones que el usuario puede abrir desde el launcher -->
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
+
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
     </queries>
@@ -27,6 +28,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pebble_app">
+        <activity
+            android:name=".BlockedAppActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

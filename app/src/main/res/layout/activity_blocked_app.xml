@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BlockedAppActivity"
+    android:background="@color/bgBlack">
+
+
+
+
+
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/outline_lock_24"
+        app:tint="@color/pibbleLogoWater"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine2"
+        app:layout_constraintEnd_toStartOf="@id/verticalGuideLine3"
+        app:layout_constraintTop_toTopOf="@id/horizontalGuideLine1"
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine2" />
+
+    <TextView
+        android:id="@+id/blockedAppNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="Instagram se encuentra bloqueado por Pebble"
+        android:textColor="@color/white"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="18sp"
+        android:autoSizeMaxTextSize="25sp"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
+        app:layout_constraintEnd_toEndOf="@id/verticalGuideLineEnd"
+        app:layout_constraintTop_toTopOf="@id/horizontalGuideLine3"
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine4"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="208dp" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="La aplicación podra ser desbloqueada hasta que el horario termine."
+        android:textColor="@color/white"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="18sp"
+        android:autoSizeMaxTextSize="22sp"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
+        app:layout_constraintEnd_toEndOf="@id/verticalGuideLineEnd"
+        app:layout_constraintTop_toTopOf="@id/horizontalGuideLine5"
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine6"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="332dp" />
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="Horario de bloqueo:"
+        android:textColor="@color/white"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="25sp"
+        android:autoSizeMaxTextSize="30sp"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
+        app:layout_constraintEnd_toEndOf="@id/verticalGuideLineEnd"
+        app:layout_constraintTop_toTopOf="@id/horizontalGuideLine7"
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine8"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="468dp" />
+
+
+    <TextView
+        android:id="@+id/timeRangeTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="9AM - 10AM"
+        android:textColor="@color/pibbleLogoWater"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="25sp"
+        android:autoSizeMaxTextSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
+        app:layout_constraintEnd_toEndOf="@id/verticalGuideLineEnd"
+        app:layout_constraintTop_toTopOf="@id/horizontalGuideLine9"
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine10"
+        tools:layout_editor_absoluteX="55dp"
+        tools:layout_editor_absoluteY="515dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideLine1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.13" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideLine2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.433" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideLine3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.56" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideLineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.862" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.221" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.28" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.373" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.547" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.637" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.696" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.701" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.76" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
