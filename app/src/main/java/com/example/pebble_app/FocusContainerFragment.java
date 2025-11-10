@@ -97,10 +97,17 @@ public class FocusContainerFragment extends Fragment {
         }
     }
 
-    public void openSessionFragment(){
+    public void openSessionFragment(int sessionId){
         FragmentManager fm = getChildFragmentManager();
         View container = getView().findViewById(R.id.fragmentContainerView);
         if (container != null) {  // Verifica que el contenedor exista
+            FragmentFocusSessionVisualizer fragmentFocusSessionVisualizerFragment = new FragmentFocusSessionVisualizer();
+
+            // Pasar el ID de la sesión al fragmento visualizador
+            Bundle args = new Bundle();
+            args.putInt("sessionId", sessionId);
+            fragmentFocusSessionVisualizerFragment.setArguments(args);
+
             FragmentTransaction ft = fm.beginTransaction();
 
             ft.setCustomAnimations(
@@ -110,7 +117,7 @@ public class FocusContainerFragment extends Fragment {
                     R.anim.slide_out_right
             );
 
-            ft.replace(R.id.fragmentContainerView, new FragmentFocusSessionVisualizer())
+            ft.replace(R.id.fragmentContainerView, fragmentFocusSessionVisualizerFragment)
                     .addToBackStack(null)
                     .commit();
         } else {

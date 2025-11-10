@@ -45,6 +45,9 @@ public class FragmentFocusSessionEdit extends Fragment
     //Variables para almacenar las horas de inicio y fin en forma de enteros
     private int startHour, startMinute, endHour, endMinute, startAmPm, endAmPm;
 
+    // int para guardar el id de la sesión
+    private int sessionId;
+
     private TextView timeRangeTV; //TV para mostar el rango de tiempo al asginarlo
 
     private String startAmPmText, endAmPmText; //Para mostar el formato AM/PM
@@ -88,6 +91,14 @@ public class FragmentFocusSessionEdit extends Fragment
             sessionName = sessionNameET.getText().toString();
             sessionDescription = sessionDescriptionET.getText().toString();
             sessionEmoticon = sessionEmoticonET.getText().toString();
+            // Obtener beginTime y endTime desde el TextView
+            String[] timeParts = timeRangeTV.getText().toString().split("-");
+            String beginTime = timeParts[0].trim(); // "8:15 AM"
+            String endTime = timeParts[1].trim();   // "10:30 PM"
+
+            DatabaseHelper db = new DatabaseHelper(requireContext());
+            db.updateFocusSession(sessionId, sessionName, sessionDescription, sessionEmoticon,
+                    beginTime, endTime, selectedDays, selectedApps);
 
             Toast.makeText(getContext(),
                     "Se ha creado la sesión", Toast.LENGTH_SHORT).show();
@@ -121,11 +132,12 @@ public class FragmentFocusSessionEdit extends Fragment
     }
 
     //Metodo para inicializar los datos de la sesión de enfoque a editar
-    public void initSessionInfo(String sessionName, String sessionDescription,
+    public void initSessionInfo(int sessionId, String sessionName, String sessionDescription,
                                 String sessionEmoticon, int startHour, int startMinute,
                                 int startAmPm, int endHour, int endMinute, int endAmPm,
                                 ArrayList<String> selectedDays, ArrayList<String> selectedApps){
 
+        this.sessionId = sessionId;
         this.sessionName = sessionName;
         this.sessionDescription = sessionDescription;
         this.sessionEmoticon = sessionEmoticon;

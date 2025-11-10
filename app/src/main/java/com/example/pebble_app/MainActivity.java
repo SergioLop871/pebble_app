@@ -28,8 +28,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         //Obtener acceso al FragmentManager
         fragmentManager = getSupportFragmentManager();
 
@@ -62,6 +60,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setUpFragments();
 
+    }
+
+    /* Se ejecuta cada vez que la aplicación pase a primer plano y revisa si se tiene
+       el permiso de "acceso a uso"
+    */
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Crear objeto AppUsageStatics
+        AppUsageStatistics appUsageStatistics = new AppUsageStatistics(this);
+
+        if (appUsageStatistics.getUsageAccessPermissionStatus()) {
+
+        }
+        else {
+            // Direccionar al permiso de acceso de uso
+            UsageAccessDialogFragment dialog = new UsageAccessDialogFragment();
+            dialog.show(fragmentManager, "usageAccessDialog");
+        }
     }
 
     @Override

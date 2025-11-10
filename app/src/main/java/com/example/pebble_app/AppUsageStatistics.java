@@ -1,14 +1,34 @@
 package com.example.pebble_app;
 
+import android.Manifest;
+import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.util.Log;
+import android.content.pm.PackageManager;
 
-import androidx.fragment.app.Fragment;
-
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+/* MODE_ALLOWED es una constante entera que indica que una operación (acceso al uso de datos)
+   ha sido autorizada por el sistema.
+
+   Es uno de los posibles valores que puede devolver el metodo:
+   int mode = appOpsManager.checkOpNoThrow();
+*/
+import static android.app.AppOpsManager.MODE_ALLOWED;
+/* OPSTR_GET_USAGE_STATS es una cadena de texto (String) constante que representa el nombre
+   de una operación de permiso del sistema. Identifica la operación de “acceso a estadísticas
+   de uso” (Usage Access).
+
+    Se usa con el metodo checkOpNoThrow() para revisar si la app tiene el permiso habilitado.
+*/
+import static android.app.AppOpsManager.OPSTR_GET_USAGE_STATS;
 
 public class AppUsageStatistics {
 
@@ -21,15 +41,31 @@ public class AppUsageStatistics {
     // Provee el contexto
     private final Context context;
 
-    // Provee el fragmento
-    private final Fragment fragment;
-
     // Constructor
-    public AppUsageStatistics(Context context, Fragment fragment) {
+    public AppUsageStatistics(Context context) {
         this.context = context;
-        this.fragment = fragment;
         // Instanciar un objeto de la clase "UsageStatsManager"
         usageStatsManager = (UsageStatsManager) this.context.getSystemService(Context.USAGE_STATS_SERVICE);
+    }
+
+    /* Verificar si se tiene el permiso para acceder a las estadísticas de uso:
+       - Revisar si el permiso "PACKAGE_USAGE_STATS" está permitido para la app
+       @return true si el permiso está otorgado
+    */
+    public boolean getUsageAccessPermissionStatus() {
+        AppOpsManager appOpsMng = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+
+        // Comprobar el estado de la operación del sistema (permiso) para la app
+        int mode = appOpsMng.checkOpNoThrow(OPSTR_GET_USAGE_STATS, android.os.Process.myUid(),
+                context.getPackageName());
+
+        if (mode == AppOpsManager.MODE_DEFAULT) {
+            return (context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
+                    == PackageManager.PERMISSION_GRANTED);
+        }
+        else {
+            return (mode == MODE_ALLOWED);
+        }
     }
 
     /*
@@ -52,12 +88,18 @@ public class AppUsageStatistics {
                    campos de tiempo han sido inicializados con la fecha y hora actuales.
         */
         Calendar cal = Calendar.getInstance();
-        // Cambiar el campo de año de la fecha a un año atrás
-        cal.add(Calendar.YEAR, -1);
+        // Cambiar la fecha al inicio del día actual (medianoche)
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        long startOfDay = cal.getTimeInMillis();
+        long now = System.currentTimeMillis();
 
         /*
-          Obtener y guardar las estadísticas de tiempo de uso de un año atrás desde el
-          tiempo actual. Las estadísticas se guardan en una lista de objetos "UsageStats".
+          Obtener y guardar las estadísticas de tiempo de uso. Las estadísticas se guardan en una
+          lista de objetos "UsageStats".
 
           Metodo queryUsageStats
 
@@ -76,19 +118,29 @@ public class AppUsageStatistics {
           Retorno: List<UsageStats>.
        */
         List<UsageStats> queryUsageStats = usageStatsManager
-                .queryUsageStats(intervalType, cal.getTimeInMillis(),
-                        System.currentTimeMillis());
+                .queryUsageStats(intervalType, startOfDay, now);
 
-        // Verificar si se tiene el permiso para acceder a las estadísticas de uso
-        if (queryUsageStats.size() == 0) {
-            Log.i(TAG, "The user may not allow the access to apps usage");
-            // Direccionar al permiso de acceso de uso
-            UsageAccessDialogFragment dialog = new UsageAccessDialogFragment();
-            dialog.show(fragment.getChildFragmentManager(), "usageAccessDialog");
+        /*
+           Filtrar las aplicaciones para sólo mantener las que fueron usadas durante el intervalo
+           de tiempo establecido
+        */
+        queryUsageStats = queryUsageStats.stream().filter(app -> app.getTotalTimeInForeground() > 0)
+                .collect(Collectors.toList());
+
+        // Agrupar cada objeto UsageStats por app y ordenarlas por tiempo total en primer plano
+        if (queryUsageStats.size() > 0) {
+            Map<String, UsageStats> sortedMap = new TreeMap<>();
+            for (UsageStats usageStats: queryUsageStats) {
+                sortedMap.put(usageStats.getPackageName(), usageStats);
+            }
+
+            List<UsageStats> usageStatsList = new ArrayList<>(sortedMap.values());
+
+            // Ordenar las apps por tiempo en primer plano (mayor a menor)
+            Collections.sort(usageStatsList, (s1, s2) -> Long.compare(s2.getTotalTimeInForeground(), s1.getTotalTimeInForeground()));
+            return usageStatsList;
         }
-
-        // Retornar las estadísticas de uso
-        return queryUsageStats;
+        List<UsageStats> emptyList = new ArrayList<>();
+        return emptyList;
     }
-
 }

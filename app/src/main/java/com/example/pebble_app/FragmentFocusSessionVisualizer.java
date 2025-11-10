@@ -1,5 +1,6 @@
 package com.example.pebble_app;
 
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,6 +41,11 @@ public class FragmentFocusSessionVisualizer extends Fragment
 
     private ArrayList<String> selectedApps; //ArrayList para guardar las apps
 
+    private int sessionId;
+
+    // Database Helper
+    DatabaseHelper myDB;
+
 
     //Crear la variable del fragmento a usar para evitar usar mucha memoria
     FragmentFocusSessionEdit editSessionFragment;
@@ -47,49 +54,91 @@ public class FragmentFocusSessionVisualizer extends Fragment
         // Required empty public constructor
     }
 
-    //Metodo llamado por el adapter para inicializar los datos
-    public void initSessionInfo(String emoticon, String name, String description,
-                                int startHour, int startMinute, int startAmPm,
-                                int endHour, int endMinute, int endAmPm,
-                                ArrayList<String> selectedDays,
-                                ArrayList<String> selectedApps){
-
-        //Inicializar los datos del elemento seleccionado
-        this.sessionEmoticon = emoticon;
-        this.sessionName = name;
-        this.sessionDescription = description;
-        this.startHour = startHour;
-        this.startMinute = startMinute;
-        this.startAmPm = startAmPm;
-        this.endHour = endHour;
-        this.endMinute = endMinute;
-        this.endAmPm = endAmPm;
-        this.selectedDays = new ArrayList<>(selectedDays);
-        this.selectedApps = new ArrayList<>(selectedApps);
-
-    }
-
     //Incializar la información para mostar al usuario
     public void initShowInfo(CardView[] dayButtons){
+        myDB = new DatabaseHelper(requireContext());
 
-        //Inicializacion temporal para pruebas
-        sessionEmoticon = "\uD83D\uDE34";
-        sessionName = "Good Sleep";
-        sessionDescription = "Preparate para dormir al activar el" +
-                "modo de buen sueño, que bloquea las " +
-                "aplicaciones que evitan que duermas. " +
-                "Asigna un rango de horas y activa el " +
-                "modo rutina si lo deseas.";
-        startHour = 10;
-        startMinute = 0;
-        startAmPm = 0;
-        endHour = 6;
-        endMinute = 0;
-        endAmPm = 1;
-        selectedDays = new ArrayList<>(Arrays.asList("L", "D", "X", "S"));
-        selectedApps = new ArrayList<>(Arrays.asList("Settings", "Chrome", "YT Music"));
+        // Verificar el valor de sessionId
+        Log.d("Visualizer", "sessionId usado: " + sessionId);
 
-        //Varaibles para iniciar el formato de timeRangeTV
+        // Obtener datos de la tabla focus_session por id
+        Cursor sessionCursor = myDB.ReadFocusSession(sessionId);
+        // Verificar filas extraídas de la BD (local)
+        Log.d("Visualizer", "Filas encontradas: " + sessionCursor.getCount());
+
+        if (sessionCursor.moveToFirst()) {
+            sessionName = sessionCursor.getString(0);
+            sessionDescription = sessionCursor.getString(1);
+            sessionEmoticon = sessionCursor.getString(2);
+
+            String beginTimeStr = sessionCursor.getString(3); // ej: "8 AM" o "9:15 PM"
+            String endTimeStr   = sessionCursor.getString(4);
+
+            // Formatear las horas
+            // Dividir en hora y AM/PM
+            String[] parts = beginTimeStr.split(" ");
+            String hourPart = parts[0];   // "8" ó "9:15"
+            String ampmPart = parts[1];   // "AM" ó "PM"
+
+            // Si la hora trae minutos
+            int hour;
+            int minute = 0;
+
+            if (hourPart.contains(":")) {
+                String[] hm = hourPart.split(":");
+                hour = Integer.parseInt(hm[0]);
+                minute = Integer.parseInt(hm[1]);
+            } else {
+                hour = Integer.parseInt(hourPart);
+            }
+
+            // Convertir AM/PM a un valor numérico
+            int ampm = ampmPart.equals("AM") ? 0 : 1;
+
+            startHour = hour;
+            startMinute = minute;
+            startAmPm = ampm;
+
+            // Separar hora y AM/PM
+            String[] partsEnd = endTimeStr.split(" ");
+            String hourPartEnd = partsEnd[0];
+            String ampmPartEnd = partsEnd[1];
+
+            // Separar hora y minuto si existen
+            int eHour;
+            int eMinute = 0;
+
+            if (hourPartEnd.contains(":")) {
+                String[] hmEnd = hourPartEnd.split(":");
+                eHour = Integer.parseInt(hmEnd[0]);
+                eMinute = Integer.parseInt(hmEnd[1]);
+            } else {
+                eHour = Integer.parseInt(hourPartEnd);
+            }
+
+            // Convertir AM/PM a int
+            int eAmPm = ampmPartEnd.equals("AM") ? 0 : 1;
+
+            endHour = eHour;
+            endMinute = eMinute;
+            endAmPm = eAmPm;
+        }
+
+        // Obtener días de la sesión
+        selectedDays = new ArrayList<>();
+        Cursor dayCursor = myDB.ReadSessionDays(sessionId);
+        while (dayCursor.moveToNext()) {
+            selectedDays.add(dayCursor.getString(0)); // "L", "M", "X", etc.
+        }
+
+        // Obtener las apps para bloquear en la sesión
+        selectedApps = new ArrayList<>();
+        Cursor appsCursor = myDB.ReadSessionApps(sessionId);
+        while (appsCursor.moveToNext()) {
+            selectedApps.add(appsCursor.getString(0));
+        }
+
+        //Variables para iniciar el formato de timeRangeTV
         String format = "%02d";
         String startMinuteFormat, startAmPmText, endMinuteFormat, endAmPmText;
         String timeRangeString;
@@ -119,8 +168,6 @@ public class FragmentFocusSessionVisualizer extends Fragment
                 }
             }
         }
-
-
     }
 
 
@@ -191,6 +238,12 @@ public class FragmentFocusSessionVisualizer extends Fragment
     //Colocar la logica de eliminar la sesión
     @Override
     public void onDeleteClick(){
+        DatabaseHelper db = new DatabaseHelper(requireContext());
+        db.deleteFocusSession(sessionId);
+
+        Toast.makeText(requireContext(), "Sesión eliminada", Toast.LENGTH_SHORT).show();
+
+        // Cerrar este fragmento y volver a la lista
         getParentFragmentManager().popBackStack();
     }
 
@@ -199,6 +252,12 @@ public class FragmentFocusSessionVisualizer extends Fragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_focus_session_visualizer, container, false);
+
+        // Recuperar el sessionId pasado desde el Bundle
+        if (getArguments() != null) {
+            sessionId = getArguments().getInt("sessionId", -1);
+            Log.d("Visualizer", "Session ID recibido: " + sessionId);
+        }
 
         //Obtener los elementos del layout
         goBackBtn = view.findViewById(R.id.goBackButton); //Boton para volver atras
@@ -240,7 +299,7 @@ public class FragmentFocusSessionVisualizer extends Fragment
 
         editBtn.setOnClickListener(v -> {
             editSessionFragment = new FragmentFocusSessionEdit();
-            editSessionFragment.initSessionInfo(sessionName, sessionDescription, sessionEmoticon,
+            editSessionFragment.initSessionInfo(sessionId, sessionName, sessionDescription, sessionEmoticon,
                     startHour, startMinute, startAmPm, endHour, endMinute, endAmPm,
                     selectedDays, selectedApps);
             getParentFragmentManager().setFragmentResultListener(

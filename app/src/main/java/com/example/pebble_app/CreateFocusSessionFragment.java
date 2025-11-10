@@ -19,6 +19,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateFocusSessionFragment extends Fragment
         implements AddAplicationDialogRecyclerViewAdapter.OnCheckBoxSellected,
@@ -89,14 +90,27 @@ public class CreateFocusSessionFragment extends Fragment
 
         //Crear la sesion si esta lista
         if(readyToCreate){
-            Toast.makeText(getContext(),
-                    "Se ha creado la sesión", Toast.LENGTH_SHORT).show();
-            Log.d("createTimerMode", "Name: " + sessionNameET.getText().toString());
-            Log.d("createTimerMode", "Description: " + sessionDescriptionET.getText().toString());
-            Log.d("createTimerMode", "Emoticon: " + sessionEmoticonET.getText().toString());
-            Log.d("createTimerMode", "Time range:  " + timeRangeTV.getText().toString());
-            Log.d("createTimerMode", "Selected days:  " + selectedDays.toString());
-            Log.d("createTimerMode", "Selected Apps:  " + selectedApps.toString());
+            String name = sessionNameET.getText().toString();
+            String description = sessionDescriptionET.getText().toString();
+            String emoji = sessionEmoticonET.getText().toString();
+            // Dividir por el guión
+            String[] parts = timeRangeTV.getText().toString().split("-");
+            // Quitar espacios sobrantes
+            String begin_time = parts[0].trim();
+            String end_time = parts[1].trim();
+            ArrayList<String> days = selectedDays;
+            ArrayList<String> apps = selectedApps;
+
+            Log.d("createTimerMode", "Name: " + name);
+            Log.d("createTimerMode", "Description: " + description);
+            Log.d("createTimerMode", "Emoticon: " + emoji);
+            Log.d("createTimerMode", "Time range:  " + begin_time + " - " + end_time);
+            Log.d("createTimerMode", "Selected days:  " + days.toString());
+            Log.d("createTimerMode", "Selected Apps:  " + apps.toString());
+
+            DatabaseHelper myDB = new DatabaseHelper(requireContext());
+            myDB.addFocusSession(name, description, emoji, begin_time, end_time, days, apps);
+
             getParentFragmentManager().popBackStack(); //Regresar al fragmento anterior
         }
     }

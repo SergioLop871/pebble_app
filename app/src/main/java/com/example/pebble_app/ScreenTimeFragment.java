@@ -174,7 +174,7 @@ public class ScreenTimeFragment extends Fragment{
         pieChart = view.findViewById(R.id.pie_chart);
 
         // Crear objeto AppUsageStatics
-        AppUsageStatistics appUsageStatistics = new AppUsageStatistics(requireContext(), this);
+        //AppUsageStatistics appUsageStatistics = new AppUsageStatistics(requireContext(), this);
 
         //---------------------OnClickListener para ir a "StatisticsFragment"-----------------------
         pieChart.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +224,7 @@ public class ScreenTimeFragment extends Fragment{
         pieChart.setTouchEnabled(false);
 
         // Obtener la lista de estadísticas de uso
-        List<UsageStats> usageStats = appUsageStatistics.getUsageStatistics(UsageStatsManager.INTERVAL_MONTHLY);
+        // List<UsageStats> usageStats = appUsageStatistics.getUsageStatistics(UsageStatsManager.INTERVAL_MONTHLY);
 
         // Inicializar una lista de datos
         ArrayList<PieEntry> pieEntries = new ArrayList<>();

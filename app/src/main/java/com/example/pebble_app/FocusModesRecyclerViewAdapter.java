@@ -24,7 +24,7 @@ public class FocusModesRecyclerViewAdapter
 
     //Interfaz para avisar a FocusFragment, y este se comunique con FocusFragmentContainer y cambien en fragmento
     public interface OnCardViewClickListener{
-        void onCardViewClicked(String mode);
+        void onCardViewClicked(int sessionId, String mode);
     }
 
     private OnCardViewClickListener listener;
@@ -81,9 +81,9 @@ public class FocusModesRecyclerViewAdapter
 
         //Abrir el fragmento para visualizar el modo creado (ver detalles)
         cardView.setOnClickListener(v -> {
-            listener.onCardViewClicked(focusModesRowModels.get(position).getFocusModeType());
+            listener.onCardViewClicked(focusModesRowModels.get(position).getSessionId(), focusModesRowModels.get(position).getFocusModeType());
             try{
-                Log.d("FocusModesRecyclerViewAdapter", "cardViewClicked: " + focusModesRowModels.get(position).getFocusModeType());
+                Log.d("FocusModesRecyclerViewAdapter", "cardViewClicked: " + focusModesRowModels.get(position).getSessionId());
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -92,7 +92,8 @@ public class FocusModesRecyclerViewAdapter
 
         //Asignar los valores de cada elemento creado
         holder.focusModeName.setText(focusModesRowModels.get(position).getFocusModeName());
-        holder.focusModeTime.setText(focusModesRowModels.get(position).getFocusModeTime());
+        holder.focusModeTime.setText(focusModesRowModels.get(position).getFocusModeBeginTime() + " - " + focusModesRowModels.get(position).getFocusModeEndTime());
+        // Revisar
         holder.focusModeDays.setText(focusModesRowModels.get(position).getFocusModeDays());
         holder.focusModeIcon.setText(focusModesRowModels.get(position).getFocusModeIcon());
 

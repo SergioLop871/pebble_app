@@ -1,6 +1,7 @@
 package com.example.pebble_app;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -48,6 +50,14 @@ public class FocusFragment extends Fragment
     //ArrayList para crear los elementos del recyclerView
     private ArrayList<FocusModesRowModel> focusModesRowModels = new ArrayList<>();
 
+    // ArrayLists para los datos de las columnas de la tabla de sesión de enfoque
+    ArrayList<String> focus_session_name, focus_session_emoji, focus_session_begin_time, focus_session_end_time;
+    ArrayList<ArrayList<String>> focus_session_days;
+    ArrayList<Integer> focus_session_ids;
+
+    // Database Helper
+    DatabaseHelper myDB;
+
     private ImageButton streakDescriptionBtn, settingsBtn, createModeBtn;
 
 
@@ -76,11 +86,11 @@ public class FocusFragment extends Fragment
 
     //Para poder cambiar de visualizar el modo seleccionado del ReyclerView
     @Override
-    public void onCardViewClicked(String mode){
+    public void onCardViewClicked(int sessionId, String mode){
         Fragment parent = getParentFragment();
         if(mode.equals("session")){
             if(parent instanceof FocusContainerFragment){
-                ((FocusContainerFragment) parent).openSessionFragment();
+                ((FocusContainerFragment) parent).openSessionFragment(sessionId);
             }
         } else if (mode.equals("timer")) {
             if(parent instanceof FocusContainerFragment){
@@ -125,42 +135,72 @@ public class FocusFragment extends Fragment
         }
     }
 
-    //Metodo para inicializar el RecyclerView
-    void getFocusModesRowModels(){
-       /*Implementar la logica al crear la base de datos
-       * para obtener los modos creados.
-       *
-       * Actualizar el RecyclerView al obtener los modos
-       * creados de la base
-       */
+    // Metodo para almacenar los datos obtenidos de la BD (Local) de la tabla sesión de enfoque en Arrays
+    void storeDataInArrays () {
+        myDB = new DatabaseHelper(requireContext());
+
+        // Inicializar arreglos de la tabla de sesión de enfoque
+        focus_session_ids = new ArrayList<>();
+        focus_session_name = new ArrayList<>();
+        focus_session_emoji = new ArrayList<>();
+        focus_session_begin_time = new ArrayList<>();
+        focus_session_end_time = new ArrayList<>();
+        focus_session_days = new ArrayList<>();
+
+        // Obtener los datos de la tabla de sesión de enfoque
+        Cursor cursor = myDB.readAllFocusData();
+        if (cursor.getCount() == 0) {
+            Toast.makeText(requireContext(), "No hay datos", Toast.LENGTH_LONG);
+        }
+        else {
+            while (cursor.moveToNext()) {
+                // Obtener el id de la sesión
+                int sessionId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+
+                // Guardar los datos en los arreglos
+                focus_session_ids.add(sessionId);
+                focus_session_name.add(cursor.getString(1));
+                focus_session_emoji.add(cursor.getString(3));
+                focus_session_begin_time.add(cursor.getString(4));
+                focus_session_end_time.add(cursor.getString(5));
+
+                // Obtener los días asociados
+                Cursor daysCursor = myDB.ReadSessionDays(sessionId);
+                ArrayList<String> days = new ArrayList<>();
+
+                if (daysCursor.getCount() == 0) {
+                    Toast.makeText(requireContext(), "Error al obtener los horarios", Toast.LENGTH_LONG);
+                }
+                else {
+                    while (daysCursor.moveToNext()) {
+                        days.add(daysCursor.getString(daysCursor.getColumnIndexOrThrow("week_day")));
+                    }
+                }
+
+                // Agregar los días a la lista principal
+                focus_session_days.add(days);
+            }
+        }
     }
 
+    // Metodo para guardar las sesiones de enfoque obtenidas de la base de datos (Local) en focusModesRowModels
+    void createFocusModesRowModels(){
+        String focusModeType = "session";
 
-    // Metodo para crear un nuevo modo de enfoque (Sesión o temporizador)
-    void createNewFocusMode(String focusModeName, String focusModeTime
-            , String focusModeDays, String focusModeIcon, String focusModeType){
+        for (int i = 0; i < focus_session_name.size(); i++) {
+            int sessionId = focus_session_ids.get(i);
+            String focusModeName = focus_session_name.get(i);
+            String focusModeIcon = focus_session_emoji.get(i);
+            String focusModeBeginTime = focus_session_begin_time.get(i);
+            String focusModeEndTime = focus_session_end_time.get(i);
+            String focusModeDays = String.join("     ", focus_session_days.get(i));
 
-        /*
-        * Aqui solo se deberian guardar los modos en la base de datos
-        * e implementar el metodo "getFocusModesRowModels()" para
-        * actualizar el RecyclerView
-        *
-        * Adicionalmente se deberia pasar un array con los nombres de las apps a
-        * bloquear (nuevo fragmento para crear un modo)
-        * */
+            //Crear el modelo para implementarlo en el recyclerview
+            FocusModesRowModel newMode = new FocusModesRowModel(sessionId, focusModeName, focusModeIcon,
+                    focusModeBeginTime, focusModeEndTime, focusModeDays, focusModeType);
 
-        //Para guardar el tipo y subirlo a la base
-        String newModeType = focusModeType;
-
-        if(focusModeDays == null){
-            focusModeDays = "";
+            focusModesRowModels.add(newMode);
         }
-
-        //Crear el modelo para implementarlo en el recyclerview
-        FocusModesRowModel newMode = new FocusModesRowModel(focusModeName, focusModeTime,
-                focusModeDays, focusModeIcon, focusModeType);
-
-        focusModesRowModels.add(newMode);
     }
 
     /* Creacion visual del fragmento (interfaz grafica)
@@ -194,39 +234,15 @@ public class FocusFragment extends Fragment
 
         focusModesRowModels.clear();
 
-        //Idea: crear un nuevo fragmento para ir al presionar el boton para añadir
-        //Crear los nuevos modos (ejemplo)
-        for(int i = 0; i < 5; i++){
-            if(i == 0){
-                createNewFocusMode("Digital Detox", "1h 00m",
-                        null, "\uD83E\uDEB4", "timer" );
-            }
-            else if (i == 1) {
-                createNewFocusMode("Study Mode", "1h 30m",
-                        null, "\uD83D\uDCDA", "timer" );
-            }
-            else if (i == 2) {
-                createNewFocusMode("Work Mode", "9 AM - 5 PM",
-                        "L     M     X     J     V",
-                        "\uD83D\uDCBB", "session" );
-            }
-            else if (i == 3) {
-                createNewFocusMode("Me Time", "6 PM - 10 PM",
-                        "L     M     X     J     V",
-                        "\uD83E\uDDD8", "session" );
-            }
-            else if (i == 4) {
-                createNewFocusMode("Good Sleep", "10 PM - 6 AM",
-                        "D     L     M     X     J     V     S",
-                        "\uD83D\uDE34", "session" );
-            }
-
-        }
-
         //Crear el adapter para el recyclerView
         adapter = new FocusModesRecyclerViewAdapter(requireContext(), focusModesRowModels, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // Cargar datos desde la base de datos y mostrarlos en el RecyclerView
+        storeDataInArrays();
+        createFocusModesRowModels();
+        adapter.notifyDataSetChanged();
 
         return view;
     }
