@@ -6,4 +6,37 @@
     </style>
 
     <style name="Theme.Pebble_app" parent="Base.Theme.Pebble_app" />
+
+    <style name="session_chip_app" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="android:textColor">@color/bgBlack</item>
+        <item name="android:textSize">15dp</item>
+        <item name="chipCornerRadius">15dp</item>
+        <item name="chipStrokeColor">@color/pibbleLogoWater</item>
+        <item name="chipStrokeWidth">2dp</item>
+        <item name="closeIconTint">@color/bgBlack</item>
+        <item name="closeIcon">@drawable/outline_close_24</item>
+    </style>
+
+    <style name="timer_chip_app" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="android:textColor">@color/bgBlack</item>
+        <item name="android:textSize">15dp</item>
+        <item name="chipCornerRadius">15dp</item>
+        <item name="chipStrokeColor">@color/pibbleLogoSand</item>
+        <item name="chipStrokeWidth">2dp</item>
+        <item name="closeIconTint">@color/bgBlack</item>
+        <item name="closeIcon">@drawable/outline_close_24</item>
+    </style>
+
+    <style name="NumberPickerTheme" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/white</item>
+
+        <!-- To remove divider -->
+        <item name="colorControlNormal">@android:color/transparent</item>
+
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textSize">30sp</item>
+
+    </style>
+    
 </resources>

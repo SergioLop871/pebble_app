@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="bgBlack">#161616</color>
+    <color name="bgWidgetBlack">#2B2B2B</color>
+    <color name="bgNav">#282C35</color>
+    <color name="bgNavRipple">#55676B</color>
+
+    <color name="piechartGray">#A2AAA0</color>
+    <color name="pibbleLogoWater">#3E9DA1</color>
+    <color name="pibbleLogoSand">#BD955B</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="screenTimeInfoBackground">#D0D0D0</color>
+    <color name="screenTimeInfoText">#293A6B</color>
+
+    <color name="schemeSelectedColor">#636262</color>
+
+    <color name="red">#F21919</color>
+
+    <color name="focusModeCardBg">#454545</color>
+
+    <color name="focusCustomInputBg">#383838</color>
+    <color name="focusCustomInputHintColor">#9B9B9B</color>
+
+    <color name="bgGray">#4E5256</color>
+
+    <color name="dayButtonSelected">#626262</color>
+
 </resources>

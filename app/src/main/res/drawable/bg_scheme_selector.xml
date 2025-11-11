@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--Cuando el texto del esquema este seleccionado-->
+    <item android:drawable="@drawable/bg_scheme_selected" android:state_selected="true"/>
+
+    <!--Cuando el texto del esquema no este seleccionado-->
+    <item android:drawable="@android:color/transparent"/>
+
+</selector>

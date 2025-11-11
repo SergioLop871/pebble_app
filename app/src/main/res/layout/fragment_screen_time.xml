@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgBlack"
+    tools:context=".ScreenTimeFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="Tiempo en Pantalla"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine2"
+            app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
+            app:layout_constraintStart_toStartOf="@+id/verticalGuideLine1"
+            app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine1" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/schemeSelectorContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/bgWidgetBlack"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine4"
+            app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
+            app:layout_constraintStart_toStartOf="@+id/verticalGuideLine1"
+            app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/schemeSelectorLeftArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_left_24" />
+
+                <TextView
+                    android:id="@+id/schemeSelectorToday"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Hoy"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_scheme_selector"/>
+
+                <TextView
+                    android:id="@+id/schemeSelectorWeek"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="Semanalmente"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_scheme_selector"/>
+
+                <TextView
+                    android:id="@+id/schemeSelectorMonth"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:text="Mensualmente"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_scheme_selector"/>
+
+                <TextView
+                    android:id="@+id/schemeSelectorYear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Anualmente"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_scheme_selector" />
+
+                <ImageButton
+                    android:id="@+id/schemeSelectorRightArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_right_24" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Contenedor del selector del dia, mes, año -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/schemeDateContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/bgBlack"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine6"
+            app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
+            app:layout_constraintStart_toStartOf="@+id/verticalGuideLine1"
+            app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/schemeDateInfoLeftArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_left_24" />
+
+                <TextView
+                    android:id="@+id/schemeDateInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="13"
+                    android:gravity="center"
+                    android:text="Mar, 23 Sep"
+                    android:textColor="@color/white"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_scheme_selector"/>
+
+                <ImageButton
+                    android:id="@+id/schemeDateInfoRightArrow"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_right_24" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Contenedor redondo del gráfico -->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/chartContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="10dp"
+            app:cardBackgroundColor="@color/bgWidgetBlack"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine8"
+            app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
+            app:layout_constraintStart_toStartOf="@+id/verticalGuideLine1"
+            app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine7">
+
+            <!-- El gráfico dentro del contenedor -->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="10dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!--CONTENEDOR-->
+
+        <!--CONTENEDOR-->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ScreenTimeInfoContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine10"
+            app:layout_constraintEnd_toStartOf="@+id/verticalGuideLine2"
+            app:layout_constraintStart_toStartOf="@+id/verticalGuideLine1"
+            app:layout_constraintTop_toTopOf="@+id/horizontalGuideLine9" >
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintWidth_percent="1"
+                    app:layout_constraintHeight_percent="0.48"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    >
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoFocusScoreContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintHeight_percent="1"
+                            app:layout_constraintWidth_percent="0.47"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoFocusScoreLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:autoSizeMaxTextSize="80sp"
+                                    android:autoSizeMinTextSize="10sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="Puntaje de\n enfoque"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoFocusScoreText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:autoSizeMaxTextSize="100sp"
+                                    android:autoSizeMinTextSize="18sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="38%"
+                                    android:textColor="@color/screenTimeInfoText"
+
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoFocusScoreLabel" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoQueriesContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_percent="1"
+                            app:layout_constraintWidth_percent="0.47"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoFocusQueriesLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="30dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:autoSizeMaxTextSize="80sp"
+                                    android:autoSizeMinTextSize="10sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="Consultas"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoFocusQueriesText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:autoSizeMaxTextSize="100sp"
+                                    android:autoSizeMinTextSize="18sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="50"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="30sp"
+
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoFocusQueriesLabel" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintWidth_percent="1"
+                    app:layout_constraintHeight_percent="0.48"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:cardBackgroundColor="@android:color/transparent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoScreenTimeContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintHeight_percent="1"
+                            app:layout_constraintWidth_percent="0.47"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoScreenTimeLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:autoSizeMaxTextSize="80sp"
+                                    android:autoSizeMinTextSize="10sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="Tiempo en\n Pantalla"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoScreenTimeText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:autoSizeMaxTextSize="100sp"
+                                    android:autoSizeMinTextSize="18sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="4h 15m"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoScreenTimeLabel" />
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/infoStreakContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:cardBackgroundColor="@color/screenTimeInfoBackground"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHeight_percent="1"
+                            app:layout_constraintWidth_percent="0.47"
+                            app:cardCornerRadius="15dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/infoStreakLabel"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:autoSizeMaxTextSize="80sp"
+                                    android:autoSizeMinTextSize="10sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="Mejor Racha\n Global"
+                                    android:textColor="@color/screenTimeInfoText"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/infoStreakText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="51dp"
+                                    android:layout_marginTop="6dp"
+                                    android:layout_marginEnd="51dp"
+                                    android:layout_marginBottom="34dp"
+                                    android:autoSizeMaxTextSize="100sp"
+                                    android:autoSizeMinTextSize="18sp"
+                                    android:autoSizeTextType="uniform"
+                                    android:gravity="center"
+                                    android:text="🔥22"
+                                    android:textColor="@color/screenTimeInfoText"
+
+                                    android:textSize="30sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/infoStreakLabel" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <!--Hasta aqui-->
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/verticalGuideLine1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.060" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/verticalGuideLine2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.937" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.093" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.131" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.164" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.188" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.209" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.233" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.532" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.552" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontalGuideLine10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.891" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
