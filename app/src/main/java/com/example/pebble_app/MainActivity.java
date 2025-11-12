@@ -1,6 +1,10 @@
 package com.example.pebble_app;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -23,6 +27,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Para saber en que indice del nav se encuentra y hacer una animación diferente
     private int currentFragmentIndex = 0;
 
+
+    /* Se ejecuta cada vez que la aplicación pase a primer plano y revisa si se tiene
+     el permiso de "acceso a uso"
+  */
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Crear objeto AppUsageStatics
+        AppUsageStatistics appUsageStatistics = new AppUsageStatistics(this);
+
+        if (appUsageStatistics.getUsageAccessPermissionStatus()) {
+
+        }
+        else {
+            // Direccionar al permiso de acceso de uso
+            UsageAccessDialogFragment dialog = new UsageAccessDialogFragment();
+            dialog.show(fragmentManager, "usageAccessDialog");
+        }
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Obtener los botones del layout
         btnFocus = findViewById(R.id.nav_focus);
-        btnScreentime = findViewById(R.id.nav_screetime);
+        btnScreentime = findViewById(R.id.nav_screentime);
         btnLeaderboard = findViewById(R.id.nav_leaderboard);
         btnUserprofile = findViewById(R.id.nav_user);
 
@@ -60,26 +87,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setUpFragments();
 
-    }
 
-    /* Se ejecuta cada vez que la aplicación pase a primer plano y revisa si se tiene
-       el permiso de "acceso a uso"
-    */
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        // Crear objeto AppUsageStatics
-        AppUsageStatistics appUsageStatistics = new AppUsageStatistics(this);
-
-        if (appUsageStatistics.getUsageAccessPermissionStatus()) {
-
+        //Verificar si se tienen permisos para sobreponer en otras apps, si no, se dirige a la config.
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
         }
-        else {
-            // Direccionar al permiso de acceso de uso
-            UsageAccessDialogFragment dialog = new UsageAccessDialogFragment();
-            dialog.show(fragmentManager, "usageAccessDialog");
+
+        //Verificar la versión del SDK para ejecutar el servicio en segundo plano
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(new Intent(this, ForegroundAppService.class));
+        } else {
+            startService(new Intent(this, ForegroundAppService.class));
         }
+
     }
 
     @Override
@@ -101,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(btnId == R.id.nav_focus){
             newFragment = focusFragment;
             newFragmentIndex = 0;
-        } else if (btnId == R.id.nav_screetime) {
+        } else if (btnId == R.id.nav_screentime) {
             newFragment = screenTimeFragment;
             newFragmentIndex = 1;
         } else if (btnId == R.id.nav_leaderboard) {

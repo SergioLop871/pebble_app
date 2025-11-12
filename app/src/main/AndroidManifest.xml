@@ -5,6 +5,10 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> <!--Permiso para segundo plano-->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/> <!--Permiso para notificaciones-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" /> <!--Permiso especifico para dataSync-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!--Permiso para sobreponer en otras apps-->
     <!--
  tools:ignore se usa para suprimir la advertencia del Lint sobre permisos protegidos.
          PACKAGE_USAGE_STATS es un permiso de nivel de sistema que no se otorga automáticamente;
@@ -28,6 +32,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pebble_app">
+
+
+        <!--Servicio que permite ejecutar la app en segundo plano -->
+        <service
+            android:name=".ForegroundAppService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
         <activity
             android:name=".BlockedAppActivity"
             android:exported="false" />

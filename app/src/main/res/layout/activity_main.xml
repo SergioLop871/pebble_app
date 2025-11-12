@@ -52,7 +52,7 @@
                 app:tint="@color/nav_color_tint"/>
 
             <ImageButton
-                android:id="@+id/nav_screetime"
+                android:id="@+id/nav_screentime"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
