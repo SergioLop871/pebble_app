@@ -13,6 +13,10 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class ForegroundAppService extends Service {
 
@@ -33,9 +37,17 @@ public class ForegroundAppService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(1, createNotification()); //Crear la notificación persistente
 
-        //Hilo para detectar las apps en primer plano
-        new Thread(() -> {
-            String lastApp = "";
+        /*Se cambia un Thread por un ScheduledExecutorService
+        * para realizar tareas asincronas, y evitar bloqueos
+        * */
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        /*Se usa scheduleWithFixedDelay
+         * para evitar que se solapen las ejecuciones
+         * del ejecutor si tardan más de lo debido
+         * */
+        executor.scheduleWithFixedDelay( () ->{
+           String lastApp = "";
 
             //Bucle para detectar las apps en tiempo real
             while (running) {
@@ -55,10 +67,9 @@ public class ForegroundAppService extends Service {
                         }
                     }
                 }
-
-                try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
             }
-        }).start();
+
+        }, 0, 1, TimeUnit.SECONDS); //Delay antes de comenzar 0, delay despues de terminar 1
 
         return START_STICKY; // mantiene el servicio vivo incluso si se cierra la app
     }
