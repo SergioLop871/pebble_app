@@ -43,15 +43,21 @@ public class ForegroundAppService extends Service {
     private HashMap<String, String> installedApps = new HashMap<>();
 
     private String startIndex0;
+
+    private String nameIndex0;
     private String endIndex0;
 
     private int startHour;
     private int startMinute;
     private int startAmPm;
 
+    private int startTotalMinutes;
+
     private int endHour;
     private int endMinute;
     private int endAmPm;
+
+    private int endTotalMinutes;
 
     private int sessionIdIdex0;
 
@@ -95,6 +101,8 @@ public class ForegroundAppService extends Service {
         startAmPm = startParts[1].equalsIgnoreCase("AM") ? 0 : 1;
         startHour += (startAmPm == 1) ? 12 : 0;
 
+        startTotalMinutes = (startHour * 60) + startMinute;
+
         String[] endParts = endIndex0.split(" ");
 
         if(endParts[0].contains(":")){
@@ -107,6 +115,9 @@ public class ForegroundAppService extends Service {
         }
         endAmPm = endParts[1].equalsIgnoreCase("AM") ? 0 : 1;
         endHour += (endAmPm == 1) ? 12 : 0;
+
+
+        endTotalMinutes = (endHour * 60) + endMinute;
     }
 
     /*
@@ -136,6 +147,7 @@ public class ForegroundAppService extends Service {
         while (cursor.moveToNext()){
             if(currentSessionID == 0){
                 sessionIdIdex0 = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                nameIndex0 = cursor.getString(1);
                 startIndex0 = cursor.getString(4);
                 endIndex0 = cursor.getString(5);
                 Log.d("ForegroundAppService", "idIndex0: " + sessionIdIdex0);
@@ -146,6 +158,7 @@ public class ForegroundAppService extends Service {
             }
         }
         cursor.close();
+
         Log.d("ForegroundAppService", "startHour0 to 24h: " + startHour);
         Log.d("ForegroundAppService", "endHour0 to 24h: " + endHour);
 
@@ -171,6 +184,7 @@ public class ForegroundAppService extends Service {
             LocalTime now = LocalTime.now();
             int hourNow = now.getHour();
             int minuteNow = now.getMinute();
+            int nowTotalMinutes = (hourNow * 60) + minuteNow;
 
             //Log.d("ForegroundAppService", "LocalTime:" + now);
             //Log.d("ForegroundAppService", "Time H/M/S: " + hourNow + ":" + minuteNow + ":" + secondsNow);
@@ -178,9 +192,11 @@ public class ForegroundAppService extends Service {
             //Actualizar la sessión si se edita
             int idCount = 0;
             Cursor cursorTemp = myDB.readAllFocusData();
+
             while (cursorTemp.moveToNext()){
                 if(idCount == 0){
                     sessionIdIdex0 = cursorTemp.getInt(cursorTemp.getColumnIndexOrThrow("id"));
+                    nameIndex0 = cursorTemp.getString(1);
                     startIndex0 = cursorTemp.getString(4);
                     endIndex0 = cursorTemp.getString(5);
                     setStartAndEndTime();
@@ -188,8 +204,6 @@ public class ForegroundAppService extends Service {
                 }
             }
 
-            activeSession = (hourNow >= startHour && hourNow <= endHour) &&
-                    (minuteNow >= startMinute && minuteNow < endMinute);
 
             String currentApp = getForegroundApp(this); //Obtener la aplicación en primer plano
 
@@ -198,9 +212,11 @@ public class ForegroundAppService extends Service {
 
                 //Cambiar logica para bloquear las aplicaciones en temporizador o sesión de enfoque
 
+                activeSession = nowTotalMinutes >= startTotalMinutes && nowTotalMinutes < endTotalMinutes;
                 //Si la sesión esta activa
                 if(activeSession){
-
+                    Log.i("ForegroundAppService", "Sesión ACTIVA!!");
+                    Log.i("ForegroundAppService", "Nombre: " + nameIndex0);
                     //Detectar las applicaciones a bloquear
                     if(sessionIndex0Packages.contains(currentApp)){
                         Intent blockIntent = new Intent(this, BlockedAppActivity.class);
@@ -214,8 +230,7 @@ public class ForegroundAppService extends Service {
 
                 }
             }
-
-            cursor.close();
+            cursorTemp.close();
 
         }, 0, 1, TimeUnit.SECONDS); //Delay antes de comenzar 0, delay despues de terminar 1
 
