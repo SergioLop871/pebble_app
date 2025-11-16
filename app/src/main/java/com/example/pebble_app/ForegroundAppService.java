@@ -8,20 +8,21 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,12 +34,17 @@ public class ForegroundAppService extends Service {
     DatabaseHelper myDB;
 
     Cursor cursor;
+
+    Cursor cursorTemp;
     private ArrayList<Integer> sessionIDs = new ArrayList<>();
 
     //Apps asginadas a la sesión por el nombre de su package
     private ArrayList<String> sessionIndex0Apps = new ArrayList<>();
 
     private ArrayList<String> sessionIndex0Packages = new ArrayList<>();
+
+    private String[] daysOfTheWeek = {"L","M","X","J","V","S","D"};
+    private ArrayList<String> sessionIndex0Days = new ArrayList<>();
 
     private HashMap<String, String> installedApps = new HashMap<>();
 
@@ -176,12 +182,26 @@ public class ForegroundAppService extends Service {
             sessionIndex0Packages.add(installedApps.get(appName));
         }
 
+        //Obtener los dias de la sesion
+        cursor = myDB.ReadSessionDays(sessionIdIdex0);
+        while (cursor.moveToNext()){
+            sessionIndex0Days.add(cursor.getString(0));
+        }
+        cursor.close();
+
+        //Obtener el dia actual
+        LocalDate today = LocalDate.now();
+        int currentDayValue = today.getDayOfWeek().getValue() - 1;
+        String currentDay = daysOfTheWeek[currentDayValue];
+        Log.d("ForegroundAppService", "Current Day: " + currentDay);
+
         /*Se usa scheduleWithFixedDelay
          * para evitar que se solapen las ejecuciones
          * del ejecutor si tardan más de lo debido
          * */
         executor.scheduleWithFixedDelay( () ->{
             LocalTime now = LocalTime.now();
+
             int hourNow = now.getHour();
             int minuteNow = now.getMinute();
             int nowTotalMinutes = (hourNow * 60) + minuteNow;
@@ -191,8 +211,7 @@ public class ForegroundAppService extends Service {
 
             //Actualizar la sessión si se edita
             int idCount = 0;
-            Cursor cursorTemp = myDB.readAllFocusData();
-
+            cursorTemp = myDB.readAllFocusData();
             while (cursorTemp.moveToNext()){
                 if(idCount == 0){
                     sessionIdIdex0 = cursorTemp.getInt(cursorTemp.getColumnIndexOrThrow("id"));
@@ -203,6 +222,36 @@ public class ForegroundAppService extends Service {
                     idCount++;
                 }
             }
+            cursorTemp.close();
+
+
+            //Obtener las apps de la sesión
+            String tempCurrentAppName;
+            cursorTemp = myDB.ReadSessionApps(sessionIdIdex0);
+            while (cursorTemp.moveToNext()){
+                tempCurrentAppName = cursorTemp.getString(0);
+                sessionIndex0Apps.add(tempCurrentAppName);
+            }
+            cursorTemp.close();
+
+            //Obtener los paquetes de las apps de la sesión
+            sessionIndex0Days.clear();
+            for(String appName : sessionIndex0Apps){
+                sessionIndex0Packages.add(installedApps.get(appName));
+            }
+
+            //Obtener los paquetes de las apps de la sesión
+            for(String appName : sessionIndex0Apps){
+                sessionIndex0Packages.add(installedApps.get(appName));
+            }
+
+            //Obtener los dias de la sesion
+            sessionIndex0Days.clear();
+            cursorTemp = myDB.ReadSessionDays(sessionIdIdex0);
+            while (cursorTemp.moveToNext()){
+                sessionIndex0Days.add(cursorTemp.getString(0));
+            }
+            cursorTemp.close();
 
 
             String currentApp = getForegroundApp(this); //Obtener la aplicación en primer plano
@@ -212,10 +261,12 @@ public class ForegroundAppService extends Service {
 
                 //Cambiar logica para bloquear las aplicaciones en temporizador o sesión de enfoque
 
-                activeSession = nowTotalMinutes >= startTotalMinutes && nowTotalMinutes < endTotalMinutes;
+                activeSession = (sessionIndex0Days.contains(currentDay)) && (nowTotalMinutes >= startTotalMinutes && nowTotalMinutes < endTotalMinutes);
                 //Si la sesión esta activa
                 if(activeSession){
                     Log.i("ForegroundAppService", "Sesión ACTIVA!!");
+                    Log.i("ForegroundAppService", "SessionDays: " + sessionIndex0Days.toString());
+
                     Log.i("ForegroundAppService", "Nombre: " + nameIndex0);
                     //Detectar las applicaciones a bloquear
                     if(sessionIndex0Packages.contains(currentApp)){
@@ -230,7 +281,6 @@ public class ForegroundAppService extends Service {
 
                 }
             }
-            cursorTemp.close();
 
         }, 0, 1, TimeUnit.SECONDS); //Delay antes de comenzar 0, delay despues de terminar 1
 
