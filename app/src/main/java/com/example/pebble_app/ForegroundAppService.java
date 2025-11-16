@@ -8,11 +8,20 @@ import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,13 +29,85 @@ import java.util.concurrent.TimeUnit;
 
 public class ForegroundAppService extends Service {
 
-    private boolean running = true;
+
+    DatabaseHelper myDB;
+
+    Cursor cursor;
+    private ArrayList<Integer> sessionIDs = new ArrayList<>();
+
+    //Apps asginadas a la sesión por el nombre de su package
+    private ArrayList<String> sessionIndex0Apps = new ArrayList<>();
+
+    private ArrayList<String> sessionIndex0Packages = new ArrayList<>();
+
+    private HashMap<String, String> installedApps = new HashMap<>();
+
+    private String startIndex0;
+    private String endIndex0;
+
+    private int startHour;
+    private int startMinute;
+    private int startAmPm;
+
+    private int endHour;
+    private int endMinute;
+    private int endAmPm;
+
+    private int sessionIdIdex0;
+
+
+    Boolean activeSession = false;
 
     @Override
     public android.os.IBinder onBind(Intent intent) {
         return null; // No se usa binding, así que se retorna null
     }
 
+    void setUpInstalledApps(){
+        PackageManager packageManager = this.getPackageManager();
+
+        // Crear un intent para buscar apps lanzables
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        // Obtener todas las actividades que pueden ser lanzadas
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent, 0);
+
+        for(ResolveInfo info : resolveInfos){
+            String appName = info.loadLabel(packageManager).toString();
+            String packageName = info.activityInfo.packageName;
+            installedApps.put(appName, packageName);
+            Log.d("LAUNCHABLE_APPS", "App: " + appName + " | Package: " + packageName);
+        }
+    }
+
+    void setStartAndEndTime(){
+        String[] startParts = startIndex0.split(" "); // ["10:30", "PM"]
+
+        if(startParts[0].contains(":")){
+            String[] startHM = startParts[0].split(":");  // ["10", "30"]
+            startHour = Integer.parseInt(startHM[0]); // 10
+            startMinute = Integer.parseInt(startHM[1]); // 30
+        } else{
+            startHour = Integer.parseInt(startParts[0]);
+            startMinute = 0;
+        }
+        startAmPm = startParts[1].equalsIgnoreCase("AM") ? 0 : 1;
+        startHour += (startAmPm == 1) ? 12 : 0;
+
+        String[] endParts = endIndex0.split(" ");
+
+        if(endParts[0].contains(":")){
+            String[] endHM = endParts[0].split(":");  // ["10", "30"]
+            endHour = Integer.parseInt(endHM[0]); // 10
+            endMinute = Integer.parseInt(endHM[1]); // 30
+        } else{
+            endHour = Integer.parseInt(endParts[0]);
+            endMinute = 0;
+        }
+        endAmPm = endParts[1].equalsIgnoreCase("AM") ? 0 : 1;
+        endHour += (endAmPm == 1) ? 12 : 0;
+    }
 
     /*
     * Método para iniciar el servicio en segundo plano
@@ -36,28 +117,92 @@ public class ForegroundAppService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(1, createNotification()); //Crear la notificación persistente
+        Log.d("ForegroundAppService", "foreground service started");
 
+
+        myDB = new DatabaseHelper(this);
         /*Se cambia un Thread por un ScheduledExecutorService
         * para realizar tareas asincronas, y evitar bloqueos
         * */
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+        //Datos de las sessiones de enfoque leer una primera vez
+        cursor = myDB.readAllFocusData();
+
+        setUpInstalledApps();
+
+        //Obtener la primera sesión para pruebas
+        int currentSessionID = 0;
+        while (cursor.moveToNext()){
+            if(currentSessionID == 0){
+                sessionIdIdex0 = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                startIndex0 = cursor.getString(4);
+                endIndex0 = cursor.getString(5);
+                Log.d("ForegroundAppService", "idIndex0: " + sessionIdIdex0);
+                Log.d("ForegroundAppService", "starIndex0: " + startIndex0);
+                Log.d("ForegroundAppService", "endIndex0: " + endIndex0);
+                setStartAndEndTime();
+                currentSessionID++;
+            }
+        }
+        cursor.close();
+        Log.d("ForegroundAppService", "startHour0 to 24h: " + startHour);
+        Log.d("ForegroundAppService", "endHour0 to 24h: " + endHour);
+
+        //Obtener las apps de la sesión
+        String currentAppName;
+        cursor = myDB.ReadSessionApps(sessionIdIdex0);
+        while (cursor.moveToNext()){
+            currentAppName = cursor.getString(0);
+            sessionIndex0Apps.add(currentAppName);
+        }
+        cursor.close();
+
+        //Obtener los paquetes de las apps de la sesión
+        for(String appName : sessionIndex0Apps){
+            sessionIndex0Packages.add(installedApps.get(appName));
+        }
 
         /*Se usa scheduleWithFixedDelay
          * para evitar que se solapen las ejecuciones
          * del ejecutor si tardan más de lo debido
          * */
         executor.scheduleWithFixedDelay( () ->{
-           String lastApp = "";
+            LocalTime now = LocalTime.now();
+            int hourNow = now.getHour();
+            int minuteNow = now.getMinute();
 
-            //Bucle para detectar las apps en tiempo real
-            while (running) {
-                String currentApp = getForegroundApp(this); //Obtener la aplicación en primer plano
-                if (currentApp != null && !currentApp.equals(lastApp)) {
-                    Log.i("AppDetect", "App en primer plano: " + currentApp);
-                    lastApp = currentApp;
+            //Log.d("ForegroundAppService", "LocalTime:" + now);
+            //Log.d("ForegroundAppService", "Time H/M/S: " + hourNow + ":" + minuteNow + ":" + secondsNow);
 
-                    //Cambiar logica para bloquear las aplicaciones en temporizador o sesión de enfoque
-                    if (currentApp.equals("com.google.android.youtube")) {
+            //Actualizar la sessión si se edita
+            int idCount = 0;
+            Cursor cursorTemp = myDB.readAllFocusData();
+            while (cursorTemp.moveToNext()){
+                if(idCount == 0){
+                    sessionIdIdex0 = cursorTemp.getInt(cursorTemp.getColumnIndexOrThrow("id"));
+                    startIndex0 = cursorTemp.getString(4);
+                    endIndex0 = cursorTemp.getString(5);
+                    setStartAndEndTime();
+                    idCount++;
+                }
+            }
+
+            activeSession = (hourNow >= startHour && hourNow <= endHour) &&
+                    (minuteNow >= startMinute && minuteNow < endMinute);
+
+            String currentApp = getForegroundApp(this); //Obtener la aplicación en primer plano
+
+            if (currentApp != null) {
+                Log.i("AppDetect", "App en primer plano: " + currentApp);
+
+                //Cambiar logica para bloquear las aplicaciones en temporizador o sesión de enfoque
+
+                //Si la sesión esta activa
+                if(activeSession){
+
+                    //Detectar las applicaciones a bloquear
+                    if(sessionIndex0Packages.contains(currentApp)){
                         Intent blockIntent = new Intent(this, BlockedAppActivity.class);
                         blockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         if (Settings.canDrawOverlays(this)) {
@@ -66,8 +211,11 @@ public class ForegroundAppService extends Service {
                             Log.w("AppDetect", "No se puede abrir bloqueo sin permiso de superposición");
                         }
                     }
+
                 }
             }
+
+            cursor.close();
 
         }, 0, 1, TimeUnit.SECONDS); //Delay antes de comenzar 0, delay despues de terminar 1
 
@@ -106,7 +254,6 @@ public class ForegroundAppService extends Service {
 
     @Override
     public void onDestroy() {
-        running = false;
         super.onDestroy();
     }
 

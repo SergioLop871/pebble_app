@@ -80,6 +80,11 @@ public class FragmentFocusSessionEdit extends Fragment
                     "Pon un nombre a la session de enfoque", Toast.LENGTH_SHORT).show();
             readyToCreate = false;
         }
+        if(selectedDays.toString().isEmpty()){
+            Toast.makeText(getContext(),
+                    "Selecciona al menos un dia", Toast.LENGTH_SHORT).show();
+            readyToCreate = false;
+        }
         if(selectedApps.isEmpty()){
             Toast.makeText(getContext(),
                     "Selecciona al menos una aplicación", Toast.LENGTH_SHORT).show();

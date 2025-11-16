@@ -10,7 +10,43 @@
 
 
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:cardBackgroundColor="@android:color/transparent"
+        app:layout_constraintStart_toStartOf="@id/verticalGuideLine1"
+        app:layout_constraintEnd_toStartOf="@id/verticalGuideLineEnd"
+        app:layout_constraintTop_toTopOf="@id/horizontalGuideLineStart"
+        app:layout_constraintBottom_toTopOf="@id/horizontalGuideLine0"
+        app:cardElevation="0dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <ImageButton
+                    android:id="@+id/goBackButton"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitCenter"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/outline_keyboard_arrow_left_24"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:text="Volver a Pebble"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:gravity="start|center"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="15sp"
+                    android:autoSizeMaxTextSize="20sp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
 
 
@@ -97,6 +133,8 @@
         tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="515dp" />
 
+
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/verticalGuideLine1"
         android:layout_width="wrap_content"
@@ -124,6 +162,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.862" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideLine0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
 
 
     <androidx.constraintlayout.widget.Guideline
