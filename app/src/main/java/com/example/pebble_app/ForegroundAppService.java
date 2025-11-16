@@ -27,16 +27,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-
 public class ForegroundAppService extends Service {
-
 
     DatabaseHelper myDB;
 
     Cursor cursor;
 
     Cursor cursorTemp;
-    private ArrayList<Integer> sessionIDs = new ArrayList<>();
 
     //Apps asginadas a la sesión por el nombre de su package
     private ArrayList<String> sessionIndex0Apps = new ArrayList<>();
@@ -47,6 +44,8 @@ public class ForegroundAppService extends Service {
     private ArrayList<String> sessionIndex0Days = new ArrayList<>();
 
     private HashMap<String, String> installedApps = new HashMap<>();
+
+    private HashMap<String, String> installedAppsNames = new HashMap<>();
 
     private String startIndex0;
 
@@ -89,6 +88,7 @@ public class ForegroundAppService extends Service {
             String appName = info.loadLabel(packageManager).toString();
             String packageName = info.activityInfo.packageName;
             installedApps.put(appName, packageName);
+            installedAppsNames.put(packageName, appName);
             Log.d("LAUNCHABLE_APPS", "App: " + appName + " | Package: " + packageName);
         }
     }
@@ -146,52 +146,6 @@ public class ForegroundAppService extends Service {
         //Datos de las sessiones de enfoque leer una primera vez
         cursor = myDB.readAllFocusData();
 
-        setUpInstalledApps();
-
-        //Obtener la primera sesión para pruebas
-        int currentSessionID = 0;
-        while (cursor.moveToNext()){
-            if(currentSessionID == 0){
-                sessionIdIdex0 = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
-                nameIndex0 = cursor.getString(1);
-                startIndex0 = cursor.getString(4);
-                endIndex0 = cursor.getString(5);
-                Log.d("ForegroundAppService", "idIndex0: " + sessionIdIdex0);
-                Log.d("ForegroundAppService", "starIndex0: " + startIndex0);
-                Log.d("ForegroundAppService", "endIndex0: " + endIndex0);
-                setStartAndEndTime();
-                currentSessionID++;
-            }
-        }
-        cursor.close();
-
-        Log.d("ForegroundAppService", "startHour0 to 24h: " + startHour);
-        Log.d("ForegroundAppService", "endHour0 to 24h: " + endHour);
-
-        //Obtener las apps de la sesión
-        String currentAppName;
-        cursor = myDB.ReadSessionApps(sessionIdIdex0);
-        while (cursor.moveToNext()){
-            currentAppName = cursor.getString(0);
-            sessionIndex0Apps.add(currentAppName);
-        }
-        cursor.close();
-
-        //Obtener los paquetes de las apps de la sesión
-        for(String appName : sessionIndex0Apps){
-            sessionIndex0Packages.add(installedApps.get(appName));
-        }
-
-        //Obtener los dias de la sesion
-        cursor = myDB.ReadSessionDays(sessionIdIdex0);
-        while (cursor.moveToNext()){
-            sessionIndex0Days.add(cursor.getString(0));
-        }
-        cursor.close();
-
-
-
-
         /*Se usa scheduleWithFixedDelay
          * para evitar que se solapen las ejecuciones
          * del ejecutor si tardan más de lo debido
@@ -209,8 +163,17 @@ public class ForegroundAppService extends Service {
             int minuteNow = now.getMinute();
             int nowTotalMinutes = (hourNow * 60) + minuteNow;
 
+
+            // 1. Limpiar las listas ANTES de obtener nuevos datos
+            sessionIndex0Apps.clear(); // Limpiar antes de rellenar
+            sessionIndex0Packages.clear(); // Limpiar antes de rellenar
+            sessionIndex0Days.clear(); // Limpiar antes de rellenar (¡asegúrate de que esté en el lugar correcto!)
             //Log.d("ForegroundAppService", "LocalTime:" + now);
             //Log.d("ForegroundAppService", "Time H/M/S: " + hourNow + ":" + minuteNow + ":" + secondsNow);
+
+            if(installedApps.isEmpty()){
+                setUpInstalledApps();
+            }
 
             //Actualizar la sessión si se edita
             int idCount = 0;
@@ -238,18 +201,11 @@ public class ForegroundAppService extends Service {
             cursorTemp.close();
 
             //Obtener los paquetes de las apps de la sesión
-            sessionIndex0Days.clear();
-            for(String appName : sessionIndex0Apps){
-                sessionIndex0Packages.add(installedApps.get(appName));
-            }
-
-            //Obtener los paquetes de las apps de la sesión
             for(String appName : sessionIndex0Apps){
                 sessionIndex0Packages.add(installedApps.get(appName));
             }
 
             //Obtener los dias de la sesion
-            sessionIndex0Days.clear();
             cursorTemp = myDB.ReadSessionDays(sessionIdIdex0);
             while (cursorTemp.moveToNext()){
                 sessionIndex0Days.add(cursorTemp.getString(0));
@@ -273,7 +229,12 @@ public class ForegroundAppService extends Service {
                     Log.i("ForegroundAppService", "Nombre: " + nameIndex0);
                     //Detectar las applicaciones a bloquear
                     if(sessionIndex0Packages.contains(currentApp)){
+                        Log.w("AppDetect", "App to block: " + installedAppsNames.get(currentApp));
+                        Log.w("AppDetect", "Package to block: " + currentApp);
                         Intent blockIntent = new Intent(this, BlockedAppActivity.class);
+                        blockIntent.putExtra("appName", installedAppsNames.get(currentApp));
+                        blockIntent.putExtra("startTime", startIndex0);
+                        blockIntent.putExtra("endTime", endIndex0);
                         blockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         if (Settings.canDrawOverlays(this)) {
                             startActivity(blockIntent);

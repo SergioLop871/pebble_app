@@ -32,7 +32,6 @@ public class CreateFocusSessionFragment extends Fragment
     private EditText sessionNameET, sessionDescriptionET, sessionEmoticonET;
 
     //Rango de horas y minutos de la sesión
-    private int sessionStartHour, sessionStartMinute, sessionEndHour, getSessionEndMinute;
 
     //LayoutInflater para colocar una chip en el chipgroup de apps
     private LayoutInflater inflater;
