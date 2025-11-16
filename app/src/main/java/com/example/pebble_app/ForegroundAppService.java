@@ -189,19 +189,22 @@ public class ForegroundAppService extends Service {
         }
         cursor.close();
 
-        //Obtener el dia actual
-        LocalDate today = LocalDate.now();
-        int currentDayValue = today.getDayOfWeek().getValue() - 1;
-        String currentDay = daysOfTheWeek[currentDayValue];
-        Log.d("ForegroundAppService", "Current Day: " + currentDay);
+
+
 
         /*Se usa scheduleWithFixedDelay
          * para evitar que se solapen las ejecuciones
          * del ejecutor si tardan más de lo debido
          * */
         executor.scheduleWithFixedDelay( () ->{
-            LocalTime now = LocalTime.now();
+            //Obtener el dia actual
+            LocalDate today = LocalDate.now();
+            int currentDayValue = today.getDayOfWeek().getValue() - 1;
+            String currentDay = daysOfTheWeek[currentDayValue];
+           // Log.d("ForegroundAppService", "Current Day: " + currentDay);
 
+            //Obtener el tiempo
+            LocalTime now = LocalTime.now();
             int hourNow = now.getHour();
             int minuteNow = now.getMinute();
             int nowTotalMinutes = (hourNow * 60) + minuteNow;
