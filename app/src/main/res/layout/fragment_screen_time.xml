@@ -163,7 +163,7 @@
             android:id="@+id/chartContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="10dp"
+            android:padding="3dp"
             app:cardBackgroundColor="@color/bgWidgetBlack"
             app:cardCornerRadius="15dp"
             app:layout_constraintBottom_toTopOf="@+id/horizontalGuideLine8"
@@ -177,7 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_margin="10dp" />
+                android:layout_margin="3dp" />
 
         </androidx.cardview.widget.CardView>
 

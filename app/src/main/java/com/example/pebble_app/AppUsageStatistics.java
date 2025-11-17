@@ -2,14 +2,17 @@ package com.example.pebble_app;
 
 import android.Manifest;
 import android.app.AppOpsManager;
+import android.app.usage.UsageEvents;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -122,9 +125,13 @@ public class AppUsageStatistics {
 
         /*
            Filtrar las aplicaciones para sólo mantener las que fueron usadas durante el intervalo
-           de tiempo establecido
+           de tiempo establecido y que tengan launcher
         */
-        queryUsageStats = queryUsageStats.stream().filter(app -> app.getTotalTimeInForeground() > 0)
+        PackageManager packageManager = context.getPackageManager();
+        
+        queryUsageStats = queryUsageStats.stream()
+                .filter(app -> app.getTotalTimeInForeground() > 0)
+                .filter(app -> hasLauncher(packageManager, app.getPackageName()))
                 .collect(Collectors.toList());
 
         // Agrupar cada objeto UsageStats por app y ordenarlas por tiempo total en primer plano
@@ -142,5 +149,119 @@ public class AppUsageStatistics {
         }
         List<UsageStats> emptyList = new ArrayList<>();
         return emptyList;
+    }
+
+    /*
+      Método para verificar si una aplicación tiene launcher (puede ser lanzada por el usuario)
+
+      Parámetros:
+      - packageManager: El PackageManager del contexto
+      - packageName: El nombre del paquete de la aplicación a verificar
+
+      Retorno: true si la aplicación tiene launcher, false en caso contrario
+    */
+    private boolean hasLauncher(PackageManager packageManager, String packageName) {
+        try {
+            // Intent para verificar si la app tiene un launcher
+            Intent launchIntent = packageManager.getLaunchIntentForPackage(packageName);
+            return launchIntent != null;
+        } catch (Exception e) {
+            // Si hay algún error al verificar, asumir que no tiene launcher
+            return false;
+        }
+    }
+
+    /*
+     * Método para obtener la cantidad de pick-ups (desbloqueos) del dispositivo
+     * Detecta específicamente cuando el teléfono se desbloquea contando cuando el launcher
+     * aparece después de un período significativo de inactividad (dispositivo bloqueado)
+     * 
+     * Retorno: El número de desbloqueos del día actual
+     */
+    public int getPickUpsCount() {
+        Calendar cal = Calendar.getInstance();
+        // Cambiar la fecha al inicio del día actual (medianoche)
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        long startOfDay = cal.getTimeInMillis();
+        long now = System.currentTimeMillis();
+
+        // Obtener el nombre del paquete del launcher del dispositivo
+        String launcherPackage = getLauncherPackageName();
+        
+        // Obtener los eventos de uso del día
+        UsageEvents events = usageStatsManager.queryEvents(startOfDay, now);
+        UsageEvents.Event event = new UsageEvents.Event();
+        
+        int pickUpsCount = 0;
+        long lastEventTime = 0;
+        long minInactivityForUnlock = 60000; // Mínimo 60 segundos de inactividad para considerar un desbloqueo
+        boolean firstEventOfDay = true;
+
+        // Procesar los eventos directamente para detectar desbloqueos
+        while (events.hasNextEvent()) {
+            events.getNextEvent(event);
+            
+            int eventType = event.getEventType();
+            String packageName = event.getPackageName();
+            long eventTime = event.getTimeStamp();
+            
+            // Detectar desbloqueos: cuando el launcher se mueve al primer plano
+            // DESPUÉS de un período significativo de inactividad
+            if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND && 
+                packageName != null && 
+                packageName.equals(launcherPackage)) {
+                
+                if (firstEventOfDay) {
+                    // El primer evento del día (primer desbloqueo de la mañana)
+                    pickUpsCount = 1;
+                    firstEventOfDay = false;
+                    lastEventTime = eventTime;
+                } else {
+                    // Verificar si ha pasado suficiente tiempo desde el último evento
+                    // Esto indica que el dispositivo estuvo bloqueado
+                    long timeSinceLastEvent = eventTime - lastEventTime;
+                    
+                    if (timeSinceLastEvent > minInactivityForUnlock) {
+                        // Ha pasado suficiente tiempo, probablemente fue un desbloqueo
+                        pickUpsCount++;
+                        lastEventTime = eventTime;
+                    } else {
+                        // Actualizar el tiempo del último evento
+                        lastEventTime = eventTime;
+                    }
+                }
+            } else if (eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
+                // Actualizar el tiempo del último evento para cualquier app
+                lastEventTime = eventTime;
+            }
+        }
+        
+        return Math.max(pickUpsCount, 0); // Asegurar que no sea negativo
+    }
+    
+    /*
+     * Método auxiliar para obtener el nombre del paquete del launcher del dispositivo
+     * 
+     * Retorno: El nombre del paquete del launcher
+     */
+    private String getLauncherPackageName() {
+        PackageManager packageManager = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        
+        // Obtener el launcher por defecto
+        android.content.pm.ResolveInfo resolveInfo = packageManager.resolveActivity(intent, 
+            PackageManager.MATCH_DEFAULT_ONLY);
+        
+        if (resolveInfo != null && resolveInfo.activityInfo != null) {
+            return resolveInfo.activityInfo.packageName;
+        }
+        
+        // Si no se encuentra, usar valores por defecto comunes
+        return "com.android.launcher"; // Valor por defecto común
     }
 }

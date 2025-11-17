@@ -1,14 +1,17 @@
 package com.example.pebble_app;
 
+import android.graphics.drawable.Drawable;
+
 public class AppStatisticsRowModel {
     String appName, appType, appTime;
-    int appIcon, appState;
+    Drawable appIcon;
+    int appState;
 
-    public AppStatisticsRowModel(String appName, String appType, int appTime,
-                                 int appIcon, int appState) {
+    public AppStatisticsRowModel(String appName, String appType, String appTime,
+                                 Drawable appIcon, int appState) {
         this.appName = appName; //Nombre de app
         this.appType = appType; //Tipo de app (distractora, productivo)
-        this.appTime = appTime + "h " + "00m"; //Tiempo de uso de app (cambiar segun esquema)
+        this.appTime = appTime; //Tiempo de uso de app (formato: "Xh Ym")
         this.appIcon = appIcon; //Logo/Icono de la app
         this.appState = appState; //Icono de estado de la app (bloqueado, desbloqueado)
     }
@@ -25,7 +28,7 @@ public class AppStatisticsRowModel {
         return appTime;
     }
 
-    public int getAppIcon() {
+    public Drawable getAppIcon() {
         return appIcon;
     }
 

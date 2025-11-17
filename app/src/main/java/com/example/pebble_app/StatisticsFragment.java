@@ -1,5 +1,8 @@
 package com.example.pebble_app;
 
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -7,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +46,8 @@ public class StatisticsFragment extends Fragment {
 
     private ArrayList<String> appNames = new ArrayList<>();
     private ArrayList<Integer> appUsageHours = new ArrayList<>();
+    private ArrayList<String> appPackageNames = new ArrayList<>();
+    private long[] appUsageTimeMs = null;
 
     //ArrayList para crear los elementos del recyclerView
     ArrayList<AppStatisticsRowModel> appStatisticsRowModels = new ArrayList<>();
@@ -70,16 +76,46 @@ public class StatisticsFragment extends Fragment {
         if (getArguments() != null) {
             appNames = getArguments().getStringArrayList("app_names");
             appUsageHours = getArguments().getIntegerArrayList("app_usage_hours");
+            appPackageNames = getArguments().getStringArrayList("app_package_names");
+            appUsageTimeMs = getArguments().getLongArray("app_usage_time_ms");
         }
     }
 
     //--------------Metodo para crear una nueva fila de información de una app en el recyclerView
-    //-Cambiar despues para obtener la información real
-    private void createNewAppStatisticsRowModel(String appName, String appType, int appHours){
-        int defaultIcon = R.drawable.outline_question_mark_24;
+    private void createNewAppStatisticsRowModel(String appName, String appType, long timeInMs, String packageName){
+        PackageManager packageManager = requireContext().getPackageManager();
+        Drawable appIcon = null;
         int defaultState = R.drawable.outline_lock_24;
-        AppStatisticsRowModel newRow = new AppStatisticsRowModel(appName, appType, appHours,
-                defaultIcon, defaultState);
+        
+        // Obtener el ícono de la aplicación
+        if (packageName != null && !packageName.isEmpty()) {
+            try {
+                ApplicationInfo appInfo = packageManager.getApplicationInfo(packageName, 0);
+                appIcon = packageManager.getApplicationIcon(appInfo);
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.w("StatisticsFragment", "No se pudo obtener el ícono de la app: " + packageName);
+                appIcon = ContextCompat.getDrawable(requireContext(), R.drawable.outline_question_mark_24);
+            }
+        } else {
+            // Si no hay package name (como "Otro"), usar ícono por defecto
+            appIcon = ContextCompat.getDrawable(requireContext(), R.drawable.outline_question_mark_24);
+        }
+        
+        // Convertir tiempo de milisegundos a horas y minutos
+        long totalMinutes = timeInMs / (1000 * 60);
+        String appTime;
+        
+        // Si el tiempo es menor a 1 minuto, mostrar "< 1 minuto"
+        if (totalMinutes < 1) {
+            appTime = "< 1m";
+        } else {
+            long hours = totalMinutes / 60;
+            long minutes = totalMinutes % 60;
+            appTime = hours + "h " + minutes + "m";
+        }
+        
+        AppStatisticsRowModel newRow = new AppStatisticsRowModel(appName, appType, appTime,
+                appIcon, defaultState);
 
         appStatisticsRowModels.add(newRow);
     }
@@ -191,16 +227,26 @@ public class StatisticsFragment extends Fragment {
         ArrayList<String> xValues = new ArrayList<>();
 
         //------Iterar los ArrayList
+        float maxHours = 0f; // Para ajustar el eje Y dinámicamente
 
         for(int i = 0; i < appNames.size(); i++){
             String appName = appNames.get(i);
-            int appHours = appUsageHours.get(i);
+            String packageName = (i < appPackageNames.size()) ? appPackageNames.get(i) : "";
+            long timeInMs = (appUsageTimeMs != null && i < appUsageTimeMs.length) ? appUsageTimeMs[i] : 0;
+            
+            // Convertir milisegundos a horas con decimales para mayor precisión
+            float timeInHours = timeInMs / (1000f * 60f * 60f);
+            
+            // Actualizar el máximo para ajustar el eje Y
+            if (timeInHours > maxHours) {
+                maxHours = timeInHours;
+            }
 
-            //Crear fila para el recyclerView con el metodo creado
-            createNewAppStatisticsRowModel(appName, "Distractor", appHours);
+            //Crear fila para el recyclerView con el metodo creado (usando tiempo real en milisegundos)
+            createNewAppStatisticsRowModel(appName, "Distractor", timeInMs, packageName);
 
-            // BarEntry(index, appHours)
-            BarEntry barEntry = new BarEntry(i, appHours);
+            // BarEntry(index, tiempoEnHoras) - usar tiempo real con decimales
+            BarEntry barEntry = new BarEntry(i, timeInHours);
 
             //Agregar el dato a la lista
             barEntries.add(barEntry);
@@ -236,7 +282,12 @@ public class StatisticsFragment extends Fragment {
         YAxis yAxis = barChart.getAxisLeft();
         yAxis.setAxisMinimum(0f);
         yAxis.setLabelCount(10);
-        yAxis.setAxisMaximum(24f);
+        
+        // Ajustar el máximo del eje Y basado en el tiempo máximo de uso
+        // Agregar un margen del 20% para mejor visualización
+        float maxAxisValue = Math.max(maxHours * 1.2f, 1f); // Mínimo 1 hora para evitar problemas
+        yAxis.setAxisMaximum(maxAxisValue);
+        
         //Cambiar el color de los nombres de cada barra
         yAxis.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
 

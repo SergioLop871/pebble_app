@@ -74,7 +74,7 @@ public class AppStatisticsRecyclerViewAdapter
         holder.appTypeTV.setText(appStatisticsRowModels.get(position).getAppType());
         holder.appTimeTV.setText(appStatisticsRowModels.get(position).getAppTime());
 
-        holder.appIconIV.setImageResource(appStatisticsRowModels.get(position).getAppIcon());
+        holder.appIconIV.setImageDrawable(appStatisticsRowModels.get(position).getAppIcon());
         holder.appStateIV.setImageResource(appStatisticsRowModels.get(position).getAppState());
 
         cardView.setLayoutParams(params);
